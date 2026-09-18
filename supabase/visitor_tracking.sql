@@ -79,6 +79,23 @@ $$;
 revoke all on function public.record_visitor_session(text, text, text, text, text, text, text, text, text, text, text) from public;
 grant execute on function public.record_visitor_session(text, text, text, text, text, text, text, text, text, text, text) to anon, authenticated;
 
+create or replace function public.get_recent_lead_notifications()
+returns table(id uuid, name text, city text, created_at timestamptz)
+language sql
+security definer
+set search_path = public
+as $$
+	select id, left(coalesce(name, ''), 80), left(coalesce(city, ''), 80), created_at
+	from public.leads
+	where created_at >= now() - interval '24 hours'
+		and nullif(trim(name), '') is not null
+	order by created_at desc
+	limit 20;
+$$;
+
+revoke all on function public.get_recent_lead_notifications() from public;
+grant execute on function public.get_recent_lead_notifications() to anon, authenticated;
+
 create or replace function public.get_funnel_analytics()
 returns table(data jsonb)
 language plpgsql

@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useSiteConfig } from "@/lib/use-site-config";
 import {
   LEAD_CREATED_EVENT,
-  loadCloudLeads,
+  loadRecentLeadNotifications,
   loadLeads,
   type LeadRecord,
 } from "@/services/dataAdapter";
@@ -51,7 +51,7 @@ export function RecentLeadPopup() {
   useEffect(() => {
     const refreshLeads = async () => {
       const localLeads = loadLeads();
-      const cloudLeads = await loadCloudLeads(configRef.current);
+      const cloudLeads = await loadRecentLeadNotifications(configRef.current);
       const merged = [...localLeads, ...cloudLeads].filter(
         (lead, index, all) => {
           const key = lead.id || `${lead.name}:${lead.at}`;

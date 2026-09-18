@@ -599,6 +599,47 @@ export async function loadCloudLeads(
   }
 }
 
+export async function loadRecentLeadNotifications(
+  config: SiteConfig,
+): Promise<LeadRecord[]> {
+  if (
+    !isBrowser() ||
+    config.admin.storageMode !== "database" ||
+    !config.admin.supabaseUrl ||
+    !config.admin.supabaseAnonKey
+  ) {
+    return [];
+  }
+  try {
+    const response = await fetch(
+      `${config.admin.supabaseUrl.replace(/\/$/, "")}/rest/v1/rpc/get_recent_lead_notifications`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: config.admin.supabaseAnonKey,
+          Authorization: `Bearer ${config.admin.supabaseAnonKey}`,
+        },
+        body: "{}",
+      },
+    );
+    if (!response.ok) return [];
+    const rows = (await response.json()) as Array<Record<string, unknown>>;
+    return rows.map((row) => ({
+      id: String(row["id"] || ""),
+      at: String(row["created_at"] || ""),
+      name: String(row["name"] || ""),
+      phone: "",
+      email: "",
+      city: String(row["city"] || ""),
+      major: "",
+      storage: "database",
+    }));
+  } catch {
+    return [];
+  }
+}
+
 function cacheLeadLocally(record: LeadRecord): void {
   if (!isBrowser()) return;
   try {

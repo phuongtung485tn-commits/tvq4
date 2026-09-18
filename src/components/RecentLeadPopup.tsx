@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useSiteConfig } from "@/lib/use-site-config";
 import {
   LEAD_CREATED_EVENT,
+  loadCloudLeads,
   loadLeads,
   type LeadRecord,
 } from "@/services/dataAdapter";
@@ -26,13 +27,16 @@ export function RecentLeadPopup() {
   } | null>(null);
   const [visible, setVisible] = useState(false);
   const [dismissed, setDismissed] = useState(false);
+  const [leadVersion, setLeadVersion] = useState(0);
   const previousNameRef = useRef<string | undefined>(undefined);
   const leadsRef = useRef<LeadRecord[]>([]);
   const fomoRef = useRef(fomo);
+  const configRef = useRef(config);
   const immediateHideRef = useRef<number | undefined>(undefined);
   const hideRef = useRef<number | undefined>(undefined);
 
   fomoRef.current = fomo;
+  configRef.current = config;
 
   const sampleItems = useMemo(
     () =>
@@ -45,8 +49,21 @@ export function RecentLeadPopup() {
   );
 
   useEffect(() => {
-    const refreshLeads = () => {
-      const recent = loadLeads().filter((lead) => {
+    const refreshLeads = async () => {
+      const localLeads = loadLeads();
+      const cloudLeads = await loadCloudLeads(configRef.current);
+      const merged = [...localLeads, ...cloudLeads].filter(
+        (lead, index, all) => {
+          const key = lead.id || `${lead.name}:${lead.at}`;
+          return (
+            all.findIndex(
+              (candidate) =>
+                (candidate.id || `${candidate.name}:${candidate.at}`) === key,
+            ) === index
+          );
+        },
+      );
+      const recent = merged.filter((lead) => {
         const timestamp = new Date(lead.at).getTime();
         return (
           Number.isFinite(timestamp) &&
@@ -54,6 +71,7 @@ export function RecentLeadPopup() {
         );
       });
       leadsRef.current = recent;
+      setLeadVersion((version) => version + 1);
     };
     const showNewLead = (event: Event) => {
       const lead = (event as CustomEvent<LeadRecord>).detail;
@@ -158,6 +176,7 @@ export function RecentLeadPopup() {
     fomo.minDelaySec,
     fomo.maxDelaySec,
     sampleItems,
+    leadVersion,
   ]);
 
   if (!fomo.enabled || !item || dismissed) return null;

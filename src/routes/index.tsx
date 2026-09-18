@@ -84,6 +84,7 @@ export const Route = createFileRoute("/")({
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESC },
     ],
+    links: [{ rel: "canonical", href: "https://tvq4.vercel.app/" }],
     scripts: [{ type: "application/ld+json", children: FAQ_JSONLD }],
   }),
   component: Landing,
@@ -502,7 +503,10 @@ function Landing() {
 
       {config.trafficStats.enabled &&
         config.trafficStats.position === "afterHero" && (
-          <section style={{ order: 15 }} className="border-b border-border/40 bg-muted/20 py-3">
+          <section
+            style={{ order: 15 }}
+            className="border-b border-border/40 bg-muted/20 py-3"
+          >
             <div className="mx-auto max-w-6xl px-4">
               <FooterStats
                 title={config.trafficStats.title}

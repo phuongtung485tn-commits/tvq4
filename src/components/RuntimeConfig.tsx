@@ -354,11 +354,19 @@ export function RuntimeConfig() {
       });
     };
     const milestones = new Set<number>();
+    // Cache scroll geometry so the scroll handler never reads layout
+    // (reading scrollHeight/innerHeight on every scroll forces reflow).
+    let cachedTotal = document.documentElement.scrollHeight - window.innerHeight;
+    const recomputeTotal = () => {
+      cachedTotal = document.documentElement.scrollHeight - window.innerHeight;
+    };
     const onScroll = () => {
       if (!canTrack("scroll")) return;
-      const total = document.documentElement.scrollHeight - window.innerHeight;
-      if (total <= 0) return;
-      const percent = Math.min(100, Math.round((window.scrollY / total) * 100));
+      if (cachedTotal <= 0) return;
+      const percent = Math.min(
+        100,
+        Math.round((window.scrollY / cachedTotal) * 100),
+      );
       for (const milestone of [25, 50, 75, 90]) {
         if (percent >= milestone && !milestones.has(milestone)) {
           milestones.add(milestone);
@@ -368,9 +376,11 @@ export function RuntimeConfig() {
     };
     document.addEventListener("click", onClick, true);
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", recomputeTotal, { passive: true });
     return () => {
       document.removeEventListener("click", onClick, true);
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", recomputeTotal);
     };
   }, [clickTracking, scrollTracking]);
 

@@ -95,10 +95,16 @@ export function ExitIntentPopup() {
     const minimumTimeMs = Math.max(0, exitIntent.minTimeOnPageSec * 1000);
     const minimumScroll = Math.max(0, Math.min(100, exitIntent.minScrollPercent));
 
-    const getScrollPercent = () => {
-      const maxScroll =
+    // Cache scroll geometry; recompute on resize instead of reading layout
+    // (scrollHeight/innerHeight) on every scroll, which forces reflow.
+    let cachedMaxScroll =
+      document.documentElement.scrollHeight - window.innerHeight || 1;
+    const recomputeMaxScroll = () => {
+      cachedMaxScroll =
         document.documentElement.scrollHeight - window.innerHeight || 1;
-      return Math.min(100, (window.scrollY / maxScroll) * 100);
+    };
+    const getScrollPercent = () => {
+      return Math.min(100, (window.scrollY / cachedMaxScroll) * 100);
     };
 
     const show = (reason: "timeout" | "leave" | "scroll") => {

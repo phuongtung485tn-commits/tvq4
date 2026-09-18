@@ -25,7 +25,7 @@ export function pushDataLayer(event: Record<string, unknown>) {
 /** Khách bắt đầu tương tác với ô input đầu tiên */
 export function trackFormStart(enabled = true) {
   if (!enabled) return;
-  pushDataLayer({ event: "form_start" });
+  trackInteraction("form_start");
 }
 
 export function trackInteraction(

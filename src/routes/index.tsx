@@ -305,11 +305,14 @@ function Landing() {
         storageMode: config.admin.storageMode,
         supabaseUrl: config.admin.supabaseUrl,
         supabaseAnonKey: config.admin.supabaseAnonKey,
+        variant: getVariant(config.abTest.enabled, config.abTest.split),
       }),
     [
       config.admin.storageMode,
       config.admin.supabaseAnonKey,
       config.admin.supabaseUrl,
+      config.abTest.enabled,
+      config.abTest.split,
     ],
   );
 

@@ -238,16 +238,17 @@ export function LeadForm({ id = "dang-ky" }: { id?: string }) {
 
     let leadSaved = false;
     try {
+      const variant = getVariant(config.abTest.enabled, config.abTest.split);
       syncBehaviorSession({
         storageMode: config.admin.storageMode,
         supabaseUrl: config.admin.supabaseUrl,
         supabaseAnonKey: config.admin.supabaseAnonKey,
+        variant,
       });
       const sessionSource = utmSource();
       // Hub UTM: dữ liệu attribution sạch, luôn an toàn (không throw)
       const utmData = getUtmPayload("last");
       const trackedSource = utmData["utm_source"] || sessionSource || "direct";
-      const variant = getVariant(config.abTest.enabled, config.abTest.split);
       const { behavior, assessment, visitorBehaviorPayload } =
         buildVisitorBehaviorPayload(
           {

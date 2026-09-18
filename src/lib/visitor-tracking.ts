@@ -28,6 +28,7 @@ export interface VisitorTrackingInitOptions {
   storageMode?: TrackingStorageMode;
   supabaseUrl?: string;
   supabaseAnonKey?: string;
+  variant?: "A" | "B";
 }
 
 type RuntimeState = {
@@ -638,6 +639,7 @@ async function fetchRemoteSessionCounts(
         p_device_kind: device.kind,
         p_os: device.os,
         p_browser: device.browser,
+        p_variant: options.variant || null,
       }),
     });
     if (!response.ok) {

@@ -421,7 +421,8 @@ alter table public.leads enable row level security;
 drop policy if exists "leads can be created by public form" on public.leads;
 create policy "leads can be created by public form" on public.leads for insert with check (true);
 
-create table if not exists public.visitor_sessions (id text primary key, visitor_id text not null, visited_day date not null, visited_month text not null, source text, medium text, campaign text, content text, device_model text, device_kind text, os text, browser text, created_at timestamptz not null default now());
+create table if not exists public.visitor_sessions (id text primary key, visitor_id text not null, visited_day date not null, visited_month text not null, source text, medium text, campaign text, content text, device_model text, device_kind text, os text, browser text, variant text, created_at timestamptz not null default now());
+alter table public.visitor_sessions add column if not exists variant text;
 alter table public.visitor_sessions enable row level security;
 grant insert on public.visitor_sessions to anon, authenticated;
 grant select on public.visitor_sessions to authenticated;
@@ -430,16 +431,17 @@ create policy "visitor sessions can be created by public form" on public.visitor
 drop policy if exists "visitor sessions can be counted by public form" on public.visitor_sessions;
 create policy "visitor sessions can be counted by public form" on public.visitor_sessions for select to authenticated;
 
-create or replace function public.record_visitor_session(p_id text, p_visitor_id text, p_source text default null, p_medium text default null, p_campaign text default null, p_content text default null, p_device_model text default null, p_device_kind text default null, p_os text default null, p_browser text default null)
+drop function if exists public.record_visitor_session(text, text, text, text, text, text, text, text, text, text);
+create or replace function public.record_visitor_session(p_id text, p_visitor_id text, p_source text default null, p_medium text default null, p_campaign text default null, p_content text default null, p_device_model text default null, p_device_kind text default null, p_os text default null, p_browser text default null, p_variant text default null)
 returns table(today_count bigint, month_count bigint) language plpgsql security definer set search_path = public as $$
 begin
   if length(p_id) not between 1 and 128 or length(p_visitor_id) not between 1 and 128 then raise exception 'invalid visitor session'; end if;
-  insert into public.visitor_sessions (id, visitor_id, visited_day, visited_month, source, medium, campaign, content, device_model, device_kind, os, browser)
-  values (p_id, p_visitor_id, current_date, to_char(current_date, 'YYYY-MM'), nullif(left(p_source, 100), ''), nullif(left(p_medium, 100), ''), nullif(left(p_campaign, 100), ''), nullif(left(p_content, 100), ''), nullif(left(p_device_model, 150), ''), nullif(left(p_device_kind, 30), ''), nullif(left(p_os, 100), ''), nullif(left(p_browser, 100), '')) on conflict (id) do nothing;
+  insert into public.visitor_sessions (id, visitor_id, visited_day, visited_month, source, medium, campaign, content, device_model, device_kind, os, browser, variant)
+  values (p_id, p_visitor_id, current_date, to_char(current_date, 'YYYY-MM'), nullif(left(p_source, 100), ''), nullif(left(p_medium, 100), ''), nullif(left(p_campaign, 100), ''), nullif(left(p_content, 100), ''), nullif(left(p_device_model, 150), ''), nullif(left(p_device_kind, 30), ''), nullif(left(p_os, 100), ''), nullif(left(p_browser, 100), ''), nullif(left(p_variant, 1), '')) on conflict (id) do nothing;
   return query select (select count(*) from public.visitor_sessions where visited_day = current_date), (select count(*) from public.visitor_sessions where visited_month = to_char(current_date, 'YYYY-MM'));
 end; $$;
-revoke all on function public.record_visitor_session(text, text, text, text, text, text, text, text, text, text) from public;
-grant execute on function public.record_visitor_session(text, text, text, text, text, text, text, text, text, text) to anon, authenticated;
+revoke all on function public.record_visitor_session(text, text, text, text, text, text, text, text, text, text, text) from public;
+grant execute on function public.record_visitor_session(text, text, text, text, text, text, text, text, text, text, text) to anon, authenticated;
 
 insert into public.funnel_configs (id, data, updated_at) values (1, ${sqlJson(cloudConfig)}, now()) on conflict (id) do update set data = excluded.data, updated_at = excluded.updated_at;
 insert into public.funnel_analytics (id, data, updated_at) values (1, ${sqlJson(analytics)}, now()) on conflict (id) do update set data = excluded.data, updated_at = excluded.updated_at;
@@ -1013,6 +1015,14 @@ function aggregateCloudAnalytics(
       leads: 0,
     };
     aggregate.bySourceStats[source].visits += 1;
+    const variant = session.variant?.trim();
+    if (variant) {
+      aggregate.byVariant[variant] = aggregate.byVariant[variant] || {
+        visits: 0,
+        leads: 0,
+      };
+      aggregate.byVariant[variant].visits += 1;
+    }
   }
   for (const lead of leads) {
     const source = cleanSource(
@@ -1223,7 +1233,7 @@ export async function loadCloudAnalytics(
       }
       if (initialStatus === 404) {
         const [sessionsResponse, leadsResponse] = await Promise.all([
-          fetch(`${base}/rest/v1/visitor_sessions?select=source&limit=5000`, {
+          fetch(`${base}/rest/v1/visitor_sessions?select=source,variant&limit=5000`, {
             headers,
           }),
           fetch(
@@ -1234,6 +1244,7 @@ export async function loadCloudAnalytics(
         if (sessionsResponse.ok && leadsResponse.ok) {
           const sessions = (await sessionsResponse.json()) as Array<{
             source?: string | null;
+            variant?: string | null;
           }>;
           const leads = (await leadsResponse.json()) as Array<{
             utm_source?: string | null;

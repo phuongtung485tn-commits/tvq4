@@ -11,8 +11,11 @@ create table if not exists public.visitor_sessions (
 	device_kind text,
 	os text,
 	browser text,
+	variant text,
 	created_at timestamptz not null default now()
 );
+
+alter table public.visitor_sessions add column if not exists variant text;
 
 alter table public.visitor_sessions enable row level security;
 grant insert on public.visitor_sessions to anon, authenticated;
@@ -27,6 +30,8 @@ create policy "visitor sessions can be counted by public form"
 	on public.visitor_sessions for select
 	to authenticated;
 
+drop function if exists public.record_visitor_session(text, text, text, text, text, text, text, text, text, text);
+
 create or replace function public.record_visitor_session(
 	p_id text,
 	p_visitor_id text,
@@ -37,7 +42,8 @@ create or replace function public.record_visitor_session(
 	p_device_model text default null,
 	p_device_kind text default null,
 	p_os text default null,
-	p_browser text default null
+	p_browser text default null,
+	p_variant text default null
 )
 returns table(today_count bigint, month_count bigint)
 language plpgsql
@@ -51,14 +57,15 @@ begin
 
 	insert into public.visitor_sessions (
 		id, visitor_id, visited_day, visited_month, source, medium, campaign,
-		content, device_model, device_kind, os, browser
+				content, device_model, device_kind, os, browser, variant
 	)
 	values (
 		p_id, p_visitor_id, current_date, to_char(current_date, 'YYYY-MM'),
 		nullif(left(p_source, 100), ''), nullif(left(p_medium, 100), ''),
 		nullif(left(p_campaign, 100), ''), nullif(left(p_content, 100), ''),
 		nullif(left(p_device_model, 150), ''), nullif(left(p_device_kind, 30), ''),
-		nullif(left(p_os, 100), ''), nullif(left(p_browser, 100), '')
+				nullif(left(p_os, 100), ''), nullif(left(p_browser, 100), ''),
+				nullif(left(p_variant, 1), '')
 	)
 	on conflict (id) do nothing;
 
@@ -69,8 +76,8 @@ begin
 end;
 $$;
 
-revoke all on function public.record_visitor_session(text, text, text, text, text, text, text, text, text, text) from public;
-grant execute on function public.record_visitor_session(text, text, text, text, text, text, text, text, text, text) to anon, authenticated;
+revoke all on function public.record_visitor_session(text, text, text, text, text, text, text, text, text, text, text) from public;
+grant execute on function public.record_visitor_session(text, text, text, text, text, text, text, text, text, text, text) to anon, authenticated;
 
 create or replace function public.get_funnel_analytics()
 returns table(data jsonb)
@@ -91,6 +98,7 @@ declare
 	visit_count bigint;
 	lead_count bigint;
 	variant_name text;
+	variant_visit_count bigint;
 	variant_lead_count bigint;
 begin
 	if not public.is_funnel_admin() then
@@ -108,12 +116,23 @@ begin
 		result := jsonb_set(result, array['bySourceStats', source_name], jsonb_build_object('visits', visit_count, 'leads', lead_count), true);
 	end loop;
 	for item in
+		select variant, count(*) as visit_count
+		from public.visitor_sessions where nullif(variant, '') is not null group by 1
+	loop
+		variant_name := item.variant;
+		variant_visit_count := item.visit_count;
+		select count(*) into variant_lead_count from public.leads where variant = variant_name;
+		result := jsonb_set(result, array['byVariant', variant_name], jsonb_build_object('visits', variant_visit_count, 'leads', variant_lead_count), true);
+	end loop;
+	for item in
 		select variant, count(*) as lead_count
 		from public.leads where nullif(variant, '') is not null group by 1
 	loop
 		variant_name := item.variant;
 		variant_lead_count := item.lead_count;
-		result := jsonb_set(result, array['byVariant', variant_name], jsonb_build_object('visits', 0, 'leads', variant_lead_count), true);
+		if not (result->'byVariant' ? variant_name) then
+			result := jsonb_set(result, array['byVariant', variant_name], jsonb_build_object('visits', 0, 'leads', variant_lead_count), true);
+		end if;
 	end loop;
 	return query select result;
 end;

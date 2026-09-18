@@ -8,6 +8,49 @@ import { trackInteraction } from "@/lib/tracking";
 
 const visitCounted = new Set<string>();
 
+/**
+ * Hoãn nạp mã của bên thứ ba (Pixel/GA4/GTM) tới khi trình duyệt rảnh
+ * hoặc người dùng tương tác lần đầu — giúp giảm JavaScript chặn FCP/LCP.
+ * Trả về hàm huỷ để dọn dẹp nếu effect chạy lại trước khi kịp thực thi.
+ */
+function whenIdleOrInteraction(run: () => void): () => void {
+  if (typeof window === "undefined") return () => {};
+  let done = false;
+  const events = ["pointerdown", "keydown", "touchstart", "scroll"] as const;
+
+  const cleanup = () => {
+    events.forEach((evt) =>
+      window.removeEventListener(evt, fire, { capture: true } as never),
+    );
+    if (idleId !== undefined) {
+      const cancel = window.cancelIdleCallback ?? window.clearTimeout;
+      cancel(idleId as never);
+    }
+  };
+
+  const fire = () => {
+    if (done) return;
+    done = true;
+    cleanup();
+    run();
+  };
+
+  const requestIdle: (cb: () => void) => number =
+    window.requestIdleCallback?.bind(window) ??
+    ((cb) => window.setTimeout(cb, 2000));
+  const idleId = requestIdle(fire);
+
+  events.forEach((evt) =>
+    window.addEventListener(evt, fire, {
+      once: true,
+      passive: true,
+      capture: true,
+    }),
+  );
+
+  return cleanup;
+}
+
 /** Chèn một thẻ <script> nội tuyến một lần duy nhất. */
 function injectInline(
   id: string,
@@ -154,64 +197,66 @@ export function RuntimeConfig() {
   const seoFaviconUrl = config.seo.faviconUrl;
   const seoSchemaType = config.seo.schemaType;
 
-  // Pixel & tracking
+  // Pixel & tracking — hoãn nạp tới khi trình duyệt rảnh / có tương tác
   useEffect(() => {
-    const existingFbq = typeof window.fbq === "function";
-    if (t.facebookPixelId) {
-      if (existingFbq) {
-        window.fbq?.("init", t.facebookPixelId);
-        if (t.events.pageView) window.fbq?.("track", "PageView");
+    return whenIdleOrInteraction(() => {
+      const existingFbq = typeof window.fbq === "function";
+      if (t.facebookPixelId) {
+        if (existingFbq) {
+          window.fbq?.("init", t.facebookPixelId);
+          if (t.events.pageView) window.fbq?.("track", "PageView");
+        } else {
+          injectInline(
+            "fb-pixel",
+            `!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','${t.facebookPixelId}');${t.events.pageView ? "fbq('track','PageView');" : ""}`,
+            "head",
+            `${t.facebookPixelId}:${t.events.pageView}`,
+          );
+        }
       } else {
-        injectInline(
-          "fb-pixel",
-          `!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','${t.facebookPixelId}');${t.events.pageView ? "fbq('track','PageView');" : ""}`,
-          "head",
-          `${t.facebookPixelId}:${t.events.pageView}`,
-        );
+        injectInline("fb-pixel", "");
       }
-    } else {
-      injectInline("fb-pixel", "");
-    }
-    if (t.tiktokPixelId) {
-      injectInline(
-        "tiktok-pixel",
-        `!function(w,d,t){w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script");n.type="text/javascript";n.async=!0;n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};ttq.load('${t.tiktokPixelId}');${t.events.pageView ? "ttq.page();" : ""}}(window,document,'ttq');`,
-        "head",
-        `${t.tiktokPixelId}:${t.events.pageView}`,
-      );
-    } else {
-      injectInline("tiktok-pixel", "");
-    }
-    if (t.ga4Id) {
-      injectSrc(
-        "ga4-src",
-        `https://www.googletagmanager.com/gtag/js?id=${t.ga4Id}`,
-        t.ga4Id,
-      );
-      injectInline(
-        "ga4-init",
-        `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${t.ga4Id}');`,
-        "head",
-        t.ga4Id,
-      );
-    } else {
-      injectSrc("ga4-src", "");
-      injectInline("ga4-init", "");
-    }
-    if (t.gtmId) {
-      injectInline(
-        "gtm-init",
-        `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${t.gtmId}');`,
-        "head",
-        t.gtmId,
-      );
-    } else {
-      injectInline("gtm-init", "");
-    }
-    setMeta("google-site-verification", t.googleVerification);
-    injectRaw("custom-head", t.customHead, "head", t.customHead);
-    injectRaw("custom-body", t.customBody, "body", t.customBody);
-    injectRaw("custom-footer", t.customFooter, "body", t.customFooter);
+      if (t.tiktokPixelId) {
+        injectInline(
+          "tiktok-pixel",
+          `!function(w,d,t){w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script");n.type="text/javascript";n.async=!0;n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};ttq.load('${t.tiktokPixelId}');${t.events.pageView ? "ttq.page();" : ""}}(window,document,'ttq');`,
+          "head",
+          `${t.tiktokPixelId}:${t.events.pageView}`,
+        );
+      } else {
+        injectInline("tiktok-pixel", "");
+      }
+      if (t.ga4Id) {
+        injectSrc(
+          "ga4-src",
+          `https://www.googletagmanager.com/gtag/js?id=${t.ga4Id}`,
+          t.ga4Id,
+        );
+        injectInline(
+          "ga4-init",
+          `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${t.ga4Id}');`,
+          "head",
+          t.ga4Id,
+        );
+      } else {
+        injectSrc("ga4-src", "");
+        injectInline("ga4-init", "");
+      }
+      if (t.gtmId) {
+        injectInline(
+          "gtm-init",
+          `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${t.gtmId}');`,
+          "head",
+          t.gtmId,
+        );
+      } else {
+        injectInline("gtm-init", "");
+      }
+      setMeta("google-site-verification", t.googleVerification);
+      injectRaw("custom-head", t.customHead, "head", t.customHead);
+      injectRaw("custom-body", t.customBody, "body", t.customBody);
+      injectRaw("custom-footer", t.customFooter, "body", t.customFooter);
+    });
   }, [
     t.facebookPixelId,
     t.tiktokPixelId,

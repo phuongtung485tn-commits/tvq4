@@ -796,6 +796,7 @@ export function LeadForm({ id = "dang-ky" }: { id?: string }) {
         />
         <select
           required
+          aria-label={field("city", "Tỉnh/Thành phố")}
           value={form.province}
           onChange={set("province")}
           className={inputClass}
@@ -813,6 +814,7 @@ export function LeadForm({ id = "dang-ky" }: { id?: string }) {
         </select>
         <select
           required
+          aria-label={field("major", "Ngành quan tâm")}
           value={form.major}
           onChange={setMajor}
           className={inputClass}

@@ -234,7 +234,7 @@ Sau đó nhập email nhận backup trong Admin, chọn `daily` hoặc `weekly`,
 Gọi thủ công để kiểm tra:
 
 ```bash
-curl -i "https://tqv10.vercel.app/api/backup?token=$BACKUP_CRON_TOKEN"
+curl -i "https://tvq4.vercel.app/api/backup?token=$BACKUP_CRON_TOKEN"
 ```
 
 Phải nhận HTTP `200 Backup sent`. Nếu nhận `503`, kiểm tra đủ biến môi trường; nếu `401`, kiểm tra token hoặc gọi từ Vercel Cron.

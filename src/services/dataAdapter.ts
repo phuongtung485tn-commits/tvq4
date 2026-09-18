@@ -280,7 +280,7 @@ export async function saveConfig(config: SiteConfig): Promise<boolean> {
 
   if (config.admin.supabaseUrl && config.admin.supabaseAnonKey) {
     const synced = await syncConfigToSupabase(config);
-    return synced || true;
+    return synced;
   }
 
   console.warn(
@@ -768,7 +768,9 @@ export async function syncLeadsToSupabase(
       result.cloudSynced += 1;
       try {
         const updated = loadLeads().map((item) =>
-          item.id === lead.id ? { ...item, storage: "database" as const } : item,
+          item.id === lead.id
+            ? { ...item, storage: "database" as const }
+            : item,
         );
         window.localStorage.setItem(LEADS_KEY, JSON.stringify(updated));
       } catch {
@@ -1112,9 +1114,7 @@ export function loadAnalytics(): AnalyticsState {
   const raw = window.localStorage.getItem(ANALYTICS_KEY);
   if (raw) {
     try {
-      return normalizeAnalytics(
-        JSON.parse(raw) as Partial<AnalyticsState>,
-      );
+      return normalizeAnalytics(JSON.parse(raw) as Partial<AnalyticsState>);
     } catch {
       return emptyAnalytics();
     }
@@ -1233,9 +1233,12 @@ export async function loadCloudAnalytics(
       }
       if (initialStatus === 404) {
         const [sessionsResponse, leadsResponse] = await Promise.all([
-          fetch(`${base}/rest/v1/visitor_sessions?select=source,variant&limit=5000`, {
-            headers,
-          }),
+          fetch(
+            `${base}/rest/v1/visitor_sessions?select=source,variant&limit=5000`,
+            {
+              headers,
+            },
+          ),
           fetch(
             `${base}/rest/v1/leads?select=utm_source,traffic_ads_source,variant&limit=5000`,
             { headers },

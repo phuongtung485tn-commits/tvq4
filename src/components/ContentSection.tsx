@@ -4,9 +4,41 @@ import { CalendarDays, Gift, Sparkles } from "lucide-react";
 
 type ContentSectionData = SiteConfig["landing"]["sectionsArray"][number];
 
+function safeHref(value: string | undefined, fallback = "#dang-ky") {
+  const trimmed = value?.trim() || "";
+  if (!trimmed) return fallback;
+  if (
+    trimmed.startsWith("#") ||
+    trimmed.startsWith("/") ||
+    trimmed.startsWith("tel:")
+  ) {
+    return trimmed;
+  }
+  try {
+    const url = new URL(trimmed);
+    return url.protocol === "https:" ? url.toString() : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function safeMediaUrl(value: string | undefined) {
+  const trimmed = value?.trim() || "";
+  if (!trimmed) return "";
+  if (trimmed.startsWith("/") || trimmed.startsWith("data:image/"))
+    return trimmed;
+  try {
+    const url = new URL(trimmed);
+    return url.protocol === "https:" ? url.toString() : "";
+  } catch {
+    return "";
+  }
+}
+
 export function ContentSection({ section }: { section: ContentSectionData }) {
   const variant = section.content?.variant || section.type;
-  const videoUrl = section.content?.buttonHref || "";
+  const videoUrl = safeMediaUrl(section.content?.buttonHref);
+  const imageUrl = safeMediaUrl(section.content?.imageUrl);
   const youtubeId = videoUrl.match(
     /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([^?&/]+)/,
   )?.[1];
@@ -47,9 +79,9 @@ export function ContentSection({ section }: { section: ContentSectionData }) {
           />
         </div>
       ) : (
-        section.content?.imageUrl && (
+        imageUrl && (
           <img
-            src={section.content.imageUrl}
+            src={safeMediaUrl(section.content.imageUrl)}
             alt=""
             className="mb-6 max-h-[20rem] w-full max-w-full rounded-2xl object-cover sm:max-h-[28rem]"
             loading="lazy"
@@ -145,7 +177,7 @@ export function ContentSection({ section }: { section: ContentSectionData }) {
       )}
       {section.content?.buttonLabel && (
         <a
-          href={section.content.buttonHref || "#dang-ky"}
+          href={safeHref(section.content.buttonHref)}
           className={`mt-6 inline-flex w-full max-w-md items-center justify-center rounded-xl px-5 py-3 text-center font-bold sm:w-auto ${
             variant === "offer"
               ? "cta-pulse bg-gold text-gold-foreground"

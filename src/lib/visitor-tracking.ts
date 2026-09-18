@@ -860,10 +860,16 @@ export function initVisitorTracking(options: VisitorTrackingInitOptions = {}) {
     if (!runtime.firstInteractionAt) runtime.firstInteractionAt = Date.now();
     updateSnapshot();
   };
+  // Cache scroll geometry; recompute on resize instead of reading layout
+  // (scrollHeight/innerHeight) on every scroll, which forces reflow.
+  let cachedTotal =
+    document.documentElement.scrollHeight - window.innerHeight;
+  const recomputeTotal = () => {
+    cachedTotal = document.documentElement.scrollHeight - window.innerHeight;
+  };
   const onScroll = () => {
     markInteraction();
-    const doc = document.documentElement;
-    const total = doc.scrollHeight - window.innerHeight;
+    const total = cachedTotal;
     const currentY = window.scrollY || 0;
     const percent = total > 0 ? Math.round((currentY / total) * 100) : 100;
     runtime.maxScrollPercent = Math.max(

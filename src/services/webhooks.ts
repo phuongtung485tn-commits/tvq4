@@ -225,7 +225,11 @@ export async function testWebhookEndpoint(
         },
       );
       if (response.ok)
-        return { label: endpoint.label || endpoint.type, ok: true, attempts: 1 };
+        return {
+          label: endpoint.label || endpoint.type,
+          ok: true,
+          attempts: 1,
+        };
       const detail = await response.text().catch(() => "");
       return {
         label: endpoint.label || endpoint.type,
@@ -314,7 +318,9 @@ export async function dispatchLead(
   }
 
   return {
-    ok: failed.length === 0 || results.some((r) => r.ok),
+    // Partial delivery is useful for diagnostics, but must not be reported as
+    // a complete multi-channel delivery.
+    ok: failed.length === 0,
     results,
     failedCount: failed.length,
   };

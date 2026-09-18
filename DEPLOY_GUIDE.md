@@ -48,6 +48,7 @@ cp .env.example .env
    - `VITE_SUPABASE_URL` — URL public của project Supabase.
    - `VITE_SUPABASE_ANON_KEY` — publishable/anon key, không dùng service role key.
    - `VITE_SUPABASE_ADMIN_EMAIL` — email của user quản trị đã tạo trong Supabase Auth.
+   - `VITE_SITE_URL` — domain HTTPS chính, ví dụ `https://tvq4.vercel.app`.
 4. Bấm **Deploy**. Xong.
 
 Sau khi thay đổi biến môi trường, cần redeploy để Vite đưa cấu hình mới vào bản build.
@@ -64,6 +65,7 @@ Sau khi thay đổi biến môi trường, cần redeploy để Vite đưa cấu
 | `VITE_SUPABASE_URL`         | Vercel Production/Preview |         Có | Project URL, ví dụ `https://project-ref.supabase.co`                        |
 | `VITE_SUPABASE_ANON_KEY`    | Vercel Production/Preview |         Có | Publishable/anon key, được phép xuất hiện trong frontend nhưng vẫn cần RLS  |
 | `VITE_SUPABASE_ADMIN_EMAIL` | Vercel Production/Preview |         Có | Email user đã có trong `admin_users`                                        |
+| `VITE_SITE_URL`             | Vercel Production/Preview |         Có | Domain chính dùng cho canonical, sitemap và robots                            |
 | `SUPABASE_URL`              | Vercel server-only        | Chỉ backup | Không có tiền tố `VITE_`                                                    |
 | `SUPABASE_SERVICE_ROLE_KEY` | Vercel server-only        | Chỉ backup | Tuyệt đối không đưa vào browser/Git                                         |
 | `RESEND_API_KEY`            | Vercel server-only        |   Tùy chọn | Dùng email server                                                           |

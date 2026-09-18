@@ -15,8 +15,11 @@ function injectInline(
   target: "head" | "body" = "head",
   configKey = code,
 ) {
-  if (!code.trim()) return;
   const existing = document.getElementById(id);
+  if (!code.trim()) {
+    existing?.remove();
+    return;
+  }
   if (existing?.dataset.configKey === configKey) return;
   existing?.remove();
   const s = document.createElement("script");
@@ -29,6 +32,10 @@ function injectInline(
 
 function injectSrc(id: string, src: string, configKey = src) {
   const existing = document.getElementById(id);
+  if (!src.trim()) {
+    existing?.remove();
+    return;
+  }
   if (existing?.dataset.configKey === configKey) return;
   existing?.remove();
   const s = document.createElement("script");
@@ -45,8 +52,11 @@ function injectRaw(
   target: "head" | "body",
   configKey = html,
 ) {
-  if (!html.trim()) return;
   const existing = document.getElementById(id);
+  if (!html.trim()) {
+    existing?.remove();
+    return;
+  }
   if (existing?.dataset.configKey === configKey) return;
   existing?.remove();
   const holder = document.createElement("div");
@@ -59,7 +69,7 @@ function injectRaw(
     const s = document.createElement("script");
     if (old.src) s.src = old.src;
     else s.text = old.textContent || "";
-    document.head.appendChild(s);
+    holder.appendChild(s);
     old.remove();
   });
   (target === "head" ? document.head : document.body).appendChild(holder);
@@ -159,6 +169,8 @@ export function RuntimeConfig() {
           `${t.facebookPixelId}:${t.events.pageView}`,
         );
       }
+    } else {
+      injectInline("fb-pixel", "");
     }
     if (t.tiktokPixelId) {
       injectInline(
@@ -167,6 +179,8 @@ export function RuntimeConfig() {
         "head",
         `${t.tiktokPixelId}:${t.events.pageView}`,
       );
+    } else {
+      injectInline("tiktok-pixel", "");
     }
     if (t.ga4Id) {
       injectSrc(
@@ -180,6 +194,9 @@ export function RuntimeConfig() {
         "head",
         t.ga4Id,
       );
+    } else {
+      injectSrc("ga4-src", "");
+      injectInline("ga4-init", "");
     }
     if (t.gtmId) {
       injectInline(
@@ -188,11 +205,13 @@ export function RuntimeConfig() {
         "head",
         t.gtmId,
       );
+    } else {
+      injectInline("gtm-init", "");
     }
     setMeta("google-site-verification", t.googleVerification);
-    injectRaw("custom-head", t.customHead, "head");
-    injectRaw("custom-body", t.customBody, "body");
-    injectRaw("custom-footer", t.customFooter, "body");
+    injectRaw("custom-head", t.customHead, "head", t.customHead);
+    injectRaw("custom-body", t.customBody, "body", t.customBody);
+    injectRaw("custom-footer", t.customFooter, "body", t.customFooter);
   }, [
     t.facebookPixelId,
     t.tiktokPixelId,

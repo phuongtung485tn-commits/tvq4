@@ -189,12 +189,42 @@ function clean(value: string | null | undefined) {
 
 function safeRead(kind: "local" | "session", key: string): UtmRecord | null {
   if (!isBrowser()) return null;
-  return memoryStore.get(`${kind}:${key}`) || null;
+  const memoryValue = memoryStore.get(`${kind}:${key}`);
+  if (memoryValue) return memoryValue;
+  try {
+    const storage =
+      kind === "local" ? window.localStorage : window.sessionStorage;
+    const raw = storage.getItem(key);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<UtmRecord>;
+    if (!parsed || typeof parsed !== "object") return null;
+    const value: UtmRecord = {
+      ...EMPTY_RECORD,
+      ...parsed,
+      params:
+        parsed.params && typeof parsed.params === "object" ? parsed.params : {},
+      click_ids:
+        parsed.click_ids && typeof parsed.click_ids === "object"
+          ? parsed.click_ids
+          : {},
+    };
+    memoryStore.set(`${kind}:${key}`, value);
+    return value;
+  } catch {
+    return null;
+  }
 }
 
 function safeWrite(kind: "local" | "session", key: string, value: UtmRecord) {
   if (!isBrowser()) return;
   memoryStore.set(`${kind}:${key}`, value);
+  try {
+    const storage =
+      kind === "local" ? window.localStorage : window.sessionStorage;
+    storage.setItem(key, JSON.stringify(value));
+  } catch {
+    /* storage may be blocked; the in-memory fallback remains available */
+  }
 }
 
 export function detectReferrerSource(referrer: string): string {
@@ -538,5 +568,14 @@ export function resetUtm() {
   if (!isBrowser()) return;
   memoryStore.delete(`local:${FIRST_TOUCH_KEY}`);
   memoryStore.delete(`session:${LAST_TOUCH_KEY}`);
-  for (const key of LEGACY_KEYS) memoryStore.delete(`local:${key}`);
+  try {
+    window.localStorage.removeItem(FIRST_TOUCH_KEY);
+    window.sessionStorage.removeItem(LAST_TOUCH_KEY);
+    for (const key of LEGACY_KEYS) {
+      memoryStore.delete(`local:${key}`);
+      window.localStorage.removeItem(key);
+    }
+  } catch {
+    /* storage may be blocked */
+  }
 }

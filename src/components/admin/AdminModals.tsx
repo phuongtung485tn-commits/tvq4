@@ -348,6 +348,18 @@ function ExitIntentModal({ onClose }: ModalProps) {
 function FomoModal({ onClose }: ModalProps) {
   const { config, update } = useSiteConfig();
   const f = config.fomo;
+  const previewFomo = () => {
+    window.dispatchEvent(
+      new CustomEvent("funnel:fomo-preview", {
+        detail: {
+          name: f.names[0] || "Khách hàng",
+          city: f.cities[0] || "Việt Nam",
+          at: new Date().toISOString(),
+          preview: true,
+        },
+      }),
+    );
+  };
   return (
     <AdminModal
       title="Thông Báo FOMO"
@@ -459,6 +471,13 @@ function FomoModal({ onClose }: ModalProps) {
           ))}
         </div>
       </Field>
+      <button
+        type="button"
+        onClick={previewFomo}
+        className="w-full rounded-lg border border-sky-300 px-3 py-2 text-xs font-bold text-sky-700"
+      >
+        Hiện thử popup FOMO
+      </button>
       <SaveHint />
     </AdminModal>
   );
@@ -5159,6 +5178,78 @@ function LandingEditorModal({ onClose }: ModalProps) {
             e.target.value = "";
           }}
         />
+      </div>
+      <div className="mb-4 space-y-2 rounded-xl border border-neutral-200 p-3 dark:border-white/10">
+        <p className="text-xs font-bold">WebP, watermark và bảo vệ copy</p>
+        <Toggle
+          checked={content.imageOptimization.convertUploadsToWebp}
+          onChange={(value) =>
+            update((draft) => {
+              draft.landing.imageOptimization.convertUploadsToWebp = value;
+            })
+          }
+          label="Tự động đổi ảnh upload sang WebP"
+        />
+        <Toggle
+          checked={content.watermark.enabled}
+          onChange={(value) =>
+            update((draft) => {
+              draft.landing.watermark.enabled = value;
+            })
+          }
+          label="Bật watermark"
+        />
+        {content.watermark.enabled && (
+          <TextInput
+            value={content.watermark.text}
+            onChange={(event) =>
+              update((draft) => {
+                draft.landing.watermark.text = event.target.value;
+              })
+            }
+            placeholder="Nội dung watermark"
+          />
+        )}
+        <Toggle
+          checked={content.copyProtection.enabled}
+          onChange={(value) =>
+            update((draft) => {
+              draft.landing.copyProtection.enabled = value;
+            })
+          }
+          label="Bật bảo vệ copy"
+        />
+        {content.copyProtection.enabled && (
+          <div className="space-y-2 border-l-2 border-primary/30 pl-3">
+            <Toggle
+              checked={content.copyProtection.blockContextMenu}
+              onChange={(value) =>
+                update((draft) => {
+                  draft.landing.copyProtection.blockContextMenu = value;
+                })
+              }
+              label="Chặn menu chuột phải"
+            />
+            <Toggle
+              checked={content.copyProtection.blockImageDrag}
+              onChange={(value) =>
+                update((draft) => {
+                  draft.landing.copyProtection.blockImageDrag = value;
+                })
+              }
+              label="Chặn kéo ảnh"
+            />
+            <Toggle
+              checked={content.copyProtection.disableSelection}
+              onChange={(value) =>
+                update((draft) => {
+                  draft.landing.copyProtection.disableSelection = value;
+                })
+              }
+              label="Tắt chọn văn bản"
+            />
+          </div>
+        )}
       </div>
       <div className="mb-4 space-y-2 rounded-xl border border-neutral-200 p-3 dark:border-white/10">
         <p className="text-xs font-bold">Bảo vệ & tối ưu ảnh</p>

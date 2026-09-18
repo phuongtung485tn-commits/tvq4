@@ -74,9 +74,11 @@ export function RecentLeadPopup() {
       setLeadVersion((version) => version + 1);
     };
     const showNewLead = (event: Event) => {
-      const lead = (event as CustomEvent<LeadRecord>).detail;
+      const detail = (event as CustomEvent<LeadRecord & { preview?: boolean }>)
+        .detail;
+      const lead = detail;
       const currentFomo = fomoRef.current;
-      if (!currentFomo.enabled || !lead?.name) return;
+      if ((!currentFomo.enabled && !detail?.preview) || !lead?.name) return;
       if (
         currentFomo.respectReducedMotion &&
         window.matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -99,9 +101,11 @@ export function RecentLeadPopup() {
     refreshLeads();
     window.addEventListener(LEAD_CREATED_EVENT, refreshLeads);
     window.addEventListener(LEAD_CREATED_EVENT, showNewLead);
+    window.addEventListener("funnel:fomo-preview", showNewLead);
     return () => {
       window.removeEventListener(LEAD_CREATED_EVENT, refreshLeads);
       window.removeEventListener(LEAD_CREATED_EVENT, showNewLead);
+      window.removeEventListener("funnel:fomo-preview", showNewLead);
       window.clearTimeout(immediateHideRef.current);
     };
   }, []);

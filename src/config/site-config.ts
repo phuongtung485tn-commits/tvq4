@@ -378,7 +378,7 @@ export const DEFAULT_CONFIG: SiteConfig = {
   ],
   tracking: {
     facebookPixelId: "",
-    tiktokPixelId: "DAILRC3C77U3EDHHCGUG",
+    tiktokPixelId: "",
     tiktokAccessToken: "",
     ga4Id: "",
     gtmId: "",
@@ -774,7 +774,8 @@ export const DEFAULT_CONFIG: SiteConfig = {
     position: "center",
     showCloseButton: true,
     showImage: true,
-    imageUrl: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=900&q=80",
+    imageUrl:
+      "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=900&q=80",
     imageAlt: "Học viên tư vấn du học nghề",
     imagePosition: "left",
   },
@@ -888,34 +889,36 @@ export const DEFAULT_CONFIG: SiteConfig = {
       {
         id: "vip-qualification",
         title: "Kịch bản VIP nhanh",
-        trigger: "Khách ở thiết bị cao cấp, xem lâu, cuộn sâu, ở tỉnh trọng điểm",
-        whenToUse: "Dùng khi khách có dấu hiệu đang cân nhắc nghiêm túc và cần chốt lịch tư vấn ngay",
+        trigger:
+          "Khách ở thiết bị cao cấp, xem lâu, cuộn sâu, ở tỉnh trọng điểm",
+        whenToUse:
+          "Dùng khi khách có dấu hiệu đang cân nhắc nghiêm túc và cần chốt lịch tư vấn ngay",
         script:
           "Chào anh/chị, em là tư vấn viên của chương trình du học nghề Trung Quốc. Em thấy anh/chị đang quan tâm rất kỹ đến ngành và lộ trình học. Nếu anh/chị muốn, em sẽ tư vấn miễn phí 1:1 và gợi ý ngành phù hợp với khả năng, mục tiêu tiền lương và thời gian phù hợp nhất.",
-        tips:
-          "- Giữ lời chào ngắn, không đọc dài\n- Hỏi mục tiêu chính: 'Anh/chị muốn đi sớm hay muốn chọn ngành nào trước?'\n- Chốt lịch tư vấn và gửi lộ trình ngay trong cuộc gọi",
+        tips: "- Giữ lời chào ngắn, không đọc dài\n- Hỏi mục tiêu chính: 'Anh/chị muốn đi sớm hay muốn chọn ngành nào trước?'\n- Chốt lịch tư vấn và gửi lộ trình ngay trong cuộc gọi",
         enabled: true,
       },
       {
         id: "hesitant-budget",
         title: "Kịch bản lo lắng chi phí",
         trigger: "Khách đọc kỹ phần học phí, lương thực tập, chi phí sinh hoạt",
-        whenToUse: "Dùng khi khách có tâm lý 'sợ tốn tiền' hoặc 'không biết có thực sự đủ khả năng'",
+        whenToUse:
+          "Dùng khi khách có tâm lý 'sợ tốn tiền' hoặc 'không biết có thực sự đủ khả năng'",
         script:
           "Em hiểu anh/chị đang quan tâm tới chi phí và độ an toàn. Chương trình này là hình thức du học nghề hợp tác doanh nghiệp, nên chi phí thực tế rất rõ ràng. Em sẽ giải thích từng phần: học phí, sinh hoạt, lương thực tập và cơ hội việc làm sau tốt nghiệp để anh/chị có căn cứ lựa chọn.",
-        tips:
-          "- Nêu rõ phần nào là 0Đ, phần nào là chi phí có thể kiểm soát\n- Chỉ ra ví dụ lương thực tập thực tế\n- Chốt bằng cách gửi tài liệu và lịch tư vấn 1:1",
+        tips: "- Nêu rõ phần nào là 0Đ, phần nào là chi phí có thể kiểm soát\n- Chỉ ra ví dụ lương thực tập thực tế\n- Chốt bằng cách gửi tài liệu và lịch tư vấn 1:1",
         enabled: true,
       },
       {
         id: "language-fear",
         title: "Kịch bản sợ tiếng Trung",
-        trigger: "Khách dừng lâu ở phần điều kiện tiếng Trung, học trước khi đi",
-        whenToUse: "Dùng khi khách lo ngại chưa biết tiếng Trung hoặc cảm giác 'không dám đi'",
+        trigger:
+          "Khách dừng lâu ở phần điều kiện tiếng Trung, học trước khi đi",
+        whenToUse:
+          "Dùng khi khách lo ngại chưa biết tiếng Trung hoặc cảm giác 'không dám đi'",
         script:
           "Anh/chị đừng lo lắng về tiếng Trung. Chương trình có khóa nền tảng tiếng Hán và kỹ năng thích nghi trước khi nhập học. Mục tiêu không phải học ngay ngay 100% giỏi, mà là đi đúng lộ trình và có hướng dẫn từ đầu đến khi làm việc.",
-        tips:
-          "- Thể hiện hỗ trợ từ đầu\n- Gây tin tưởng bằng lộ trình học rõ ràng\n- Đừng nhấn mạnh quá nhiều rủi ro, hãy biến nỗi sợ thành giải pháp rõ",
+        tips: "- Thể hiện hỗ trợ từ đầu\n- Gây tin tưởng bằng lộ trình học rõ ràng\n- Đừng nhấn mạnh quá nhiều rủi ro, hãy biến nỗi sợ thành giải pháp rõ",
         enabled: true,
       },
     ],
@@ -940,10 +943,8 @@ export const DEFAULT_CONFIG: SiteConfig = {
     gmailClientSecret: "",
     gmailRefreshToken: "",
     subject: "Cảm ơn {name} – Chúng tôi đã ghi nhận yêu cầu tư vấn của bạn",
-    body:
-      "Kính chào {name},\n\nCảm ơn anh/chị đã dành thời gian để lại thông tin trên website.\n\nChúng tôi đã nhận được nhu cầu tư vấn về ngành {major} tại {city} và đang tiến hành rà soát thông tin để kết nối với tư vấn viên phù hợp nhất.\n\nTrong thời gian sớm nhất, đội ngũ tư vấn của chúng tôi sẽ liên hệ qua số {phone} để trao đổi lộ trình học, điều kiện nhập học và các ưu đãi phù hợp với mục tiêu nghề nghiệp của anh/chị.\n\nNếu anh/chị muốn được tư vấn ngay, vui lòng giữ điện thoại trong trạng thái sẵn sàng hoặc phản hồi lại email này để được hỗ trợ nhanh hơn.\n\nTrân trọng,\nĐội ngũ tư vấn chuyên nghiệp",
-    notifySubject:
-      "[Lead mới] {name} | {phone} | {city} | {major} | {source}",
+    body: "Kính chào {name},\n\nCảm ơn anh/chị đã dành thời gian để lại thông tin trên website.\n\nChúng tôi đã nhận được nhu cầu tư vấn về ngành {major} tại {city} và đang tiến hành rà soát thông tin để kết nối với tư vấn viên phù hợp nhất.\n\nTrong thời gian sớm nhất, đội ngũ tư vấn của chúng tôi sẽ liên hệ qua số {phone} để trao đổi lộ trình học, điều kiện nhập học và các ưu đãi phù hợp với mục tiêu nghề nghiệp của anh/chị.\n\nNếu anh/chị muốn được tư vấn ngay, vui lòng giữ điện thoại trong trạng thái sẵn sàng hoặc phản hồi lại email này để được hỗ trợ nhanh hơn.\n\nTrân trọng,\nĐội ngũ tư vấn chuyên nghiệp",
+    notifySubject: "[Lead mới] {name} | {phone} | {city} | {major} | {source}",
     notifyBody:
       "Một lead mới vừa đăng ký trên website.\n\nHọ tên: {name}\nSố điện thoại: {phone}\nTỉnh/Thành: {city}\nNgành quan tâm: {major}\nNguồn: {source}\nAI Score: {ai_score}\nThời gian: {timestamp}\n\nVui lòng gọi lại trong vòng 10 phút để chốt lịch tư vấn và ưu tiên lead theo mức độ phù hợp.",
   },

@@ -225,6 +225,54 @@ export function RuntimeConfig() {
   ]);
 
   useEffect(() => {
+    const protection = config.landing.copyProtection;
+    const watermark = config.landing.watermark;
+    const watermarkId = "site-watermark-overlay";
+    let overlay = document.getElementById(watermarkId);
+    if (watermark.enabled && watermark.text.trim()) {
+      if (!overlay) {
+        overlay = document.createElement("div");
+        overlay.id = watermarkId;
+        document.body.appendChild(overlay);
+      }
+      overlay.textContent = watermark.text.trim();
+      overlay.setAttribute(
+        "style",
+        `position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;pointer-events:none;user-select:none;transform:rotate(-24deg);font-size:clamp(1.5rem,5vw,4rem);font-weight:800;letter-spacing:.08em;color:rgba(255,255,255,${Math.min(1, Math.max(0, watermark.opacity))});text-shadow:0 1px 3px rgba(0,0,0,.35);white-space:nowrap;overflow:hidden;`,
+      );
+    } else {
+      overlay?.remove();
+    }
+
+    const onContextMenu = (event: MouseEvent) => {
+      if (protection.enabled && protection.blockContextMenu)
+        event.preventDefault();
+    };
+    const onDragStart = (event: DragEvent) => {
+      if (
+        protection.enabled &&
+        protection.blockImageDrag &&
+        event.target instanceof HTMLImageElement
+      )
+        event.preventDefault();
+    };
+    document.addEventListener("contextmenu", onContextMenu);
+    document.addEventListener("dragstart", onDragStart);
+    document.documentElement.classList.toggle(
+      "copy-protection-selection-disabled",
+      protection.enabled && protection.disableSelection,
+    );
+    return () => {
+      document.removeEventListener("contextmenu", onContextMenu);
+      document.removeEventListener("dragstart", onDragStart);
+      document.documentElement.classList.remove(
+        "copy-protection-selection-disabled",
+      );
+      document.getElementById(watermarkId)?.remove();
+    };
+  }, [config.landing.copyProtection, config.landing.watermark]);
+
+  useEffect(() => {
     const canTrack = (key: "click" | "scroll") =>
       (key === "click" ? clickTracking : scrollTracking) !== false;
     const onClick = (event: MouseEvent) => {

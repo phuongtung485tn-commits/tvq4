@@ -80,7 +80,9 @@ function ExitIntentModal({ onClose }: ModalProps) {
     >
       <div className="mb-3 rounded-xl border border-neutral-200 bg-neutral-50 p-3 dark:border-white/10 dark:bg-white/5">
         <div className="flex items-center justify-between gap-2">
-          <span className={`rounded-full px-2 py-1 text-[10px] font-bold uppercase tracking-wide ${status.className}`}>
+          <span
+            className={`rounded-full px-2 py-1 text-[10px] font-bold uppercase tracking-wide ${status.className}`}
+          >
             {status.label}
           </span>
           <span className="text-[10px] text-neutral-500">{status.detail}</span>
@@ -129,7 +131,9 @@ function ExitIntentModal({ onClose }: ModalProps) {
                 <button
                   key={pos}
                   type="button"
-                  onClick={() => update((d) => (d.exitIntent.imagePosition = pos))}
+                  onClick={() =>
+                    update((d) => (d.exitIntent.imagePosition = pos))
+                  }
                   className={`flex-1 rounded-lg border px-3 py-2 text-xs font-semibold ${
                     e.imagePosition === pos
                       ? "border-neutral-900 bg-neutral-900 text-white"
@@ -145,28 +149,32 @@ function ExitIntentModal({ onClose }: ModalProps) {
       )}
       <Field label="Mẫu popup">
         <div className="flex flex-wrap gap-2">
-          {(["offer", "urgency", "trust", "premium", "limited"] as const).map((template) => (
-            <button
-              key={template}
-              type="button"
-              onClick={() => update((d) => (d.exitIntent.templateId = template))}
-              className={`rounded-lg border px-3 py-2 text-[11px] font-semibold ${
-                e.templateId === template
-                  ? "border-neutral-900 bg-neutral-900 text-white"
-                  : "border-neutral-300"
-              }`}
-            >
-              {template === "offer"
-                ? "Ưu đãi"
-                : template === "urgency"
-                  ? "Khẩn cấp"
-                  : template === "trust"
-                    ? "Tin cậy"
-                    : template === "premium"
-                      ? "Premium"
-                      : "Giới hạn"}
-            </button>
-          ))}
+          {(["offer", "urgency", "trust", "premium", "limited"] as const).map(
+            (template) => (
+              <button
+                key={template}
+                type="button"
+                onClick={() =>
+                  update((d) => (d.exitIntent.templateId = template))
+                }
+                className={`rounded-lg border px-3 py-2 text-[11px] font-semibold ${
+                  e.templateId === template
+                    ? "border-neutral-900 bg-neutral-900 text-white"
+                    : "border-neutral-300"
+                }`}
+              >
+                {template === "offer"
+                  ? "Ưu đãi"
+                  : template === "urgency"
+                    ? "Khẩn cấp"
+                    : template === "trust"
+                      ? "Tin cậy"
+                      : template === "premium"
+                        ? "Premium"
+                        : "Giới hạn"}
+              </button>
+            ),
+          )}
         </div>
       </Field>
       <Field label="Badge">
@@ -207,7 +215,9 @@ function ExitIntentModal({ onClose }: ModalProps) {
             type="number"
             value={e.triggerDelaySec}
             onChange={(event) =>
-              update((d) => (d.exitIntent.triggerDelaySec = +event.target.value))
+              update(
+                (d) => (d.exitIntent.triggerDelaySec = +event.target.value),
+              )
             }
           />
         </Field>
@@ -216,7 +226,9 @@ function ExitIntentModal({ onClose }: ModalProps) {
             type="number"
             value={e.minTimeOnPageSec}
             onChange={(event) =>
-              update((d) => (d.exitIntent.minTimeOnPageSec = +event.target.value))
+              update(
+                (d) => (d.exitIntent.minTimeOnPageSec = +event.target.value),
+              )
             }
           />
         </Field>
@@ -225,7 +237,9 @@ function ExitIntentModal({ onClose }: ModalProps) {
             type="number"
             value={e.minScrollPercent}
             onChange={(event) =>
-              update((d) => (d.exitIntent.minScrollPercent = +event.target.value))
+              update(
+                (d) => (d.exitIntent.minScrollPercent = +event.target.value),
+              )
             }
           />
         </Field>
@@ -242,9 +256,7 @@ function ExitIntentModal({ onClose }: ModalProps) {
       />
       <Toggle
         checked={e.respectReducedMotion}
-        onChange={(v) =>
-          update((d) => (d.exitIntent.respectReducedMotion = v))
-        }
+        onChange={(v) => update((d) => (d.exitIntent.respectReducedMotion = v))}
         label="Tắt chuyển động khi người dùng yêu cầu giảm motion"
       />
       <Field label="Vị trí hiển thị">
@@ -284,7 +296,13 @@ function ExitIntentModal({ onClose }: ModalProps) {
           <div className="bg-gradient-to-r from-primary via-amber-500 to-[#f59e0b] px-3 py-2 text-[9px] font-black uppercase tracking-[0.24em] text-white">
             {getExitIntentTemplate(e).badge}
           </div>
-          <div className={e.showImage && e.imageUrl ? "grid md:grid-cols-[0.9fr_1.1fr]" : "grid grid-cols-1"}>
+          <div
+            className={
+              e.showImage && e.imageUrl
+                ? "grid md:grid-cols-[0.9fr_1.1fr]"
+                : "grid grid-cols-1"
+            }
+          >
             {e.showImage && e.imageUrl && (
               <div className="relative min-h-[180px] overflow-hidden border-b border-white/10 md:border-b-0 md:border-r md:border-white/10">
                 <img
@@ -461,10 +479,14 @@ function FormModal({ onClose }: ModalProps) {
     >
       <div className="mb-3 rounded-xl border border-neutral-200 bg-neutral-50 p-3 dark:border-white/10 dark:bg-white/5">
         <div className="flex items-center justify-between gap-2">
-          <span className={`rounded-full px-2 py-1 text-[10px] font-bold uppercase tracking-wide ${storageStatus.className}`}>
+          <span
+            className={`rounded-full px-2 py-1 text-[10px] font-bold uppercase tracking-wide ${storageStatus.className}`}
+          >
             {storageStatus.label}
           </span>
-          <span className="text-[10px] text-neutral-500">{storageStatus.detail}</span>
+          <span className="text-[10px] text-neutral-500">
+            {storageStatus.detail}
+          </span>
         </div>
       </div>
       <Field label="Tiêu đề form">
@@ -714,7 +736,11 @@ function CountdownModal({ onClose }: ModalProps) {
               key={preset.value}
               type="button"
               onClick={() =>
-                update((d) => (d.countdown.template = preset.value as typeof d.countdown.template))
+                update(
+                  (d) =>
+                    (d.countdown.template =
+                      preset.value as typeof d.countdown.template),
+                )
               }
               className={`rounded-xl border px-3 py-2 text-sm font-semibold transition ${
                 c.template === preset.value
@@ -839,10 +865,14 @@ function PixelModal({ onClose }: ModalProps) {
     >
       <div className="mb-3 rounded-xl border border-neutral-200 bg-neutral-50 p-3 dark:border-white/10 dark:bg-white/5">
         <div className="flex items-center justify-between gap-2">
-          <span className={`rounded-full px-2 py-1 text-[10px] font-bold uppercase tracking-wide ${storageStatus.className}`}>
+          <span
+            className={`rounded-full px-2 py-1 text-[10px] font-bold uppercase tracking-wide ${storageStatus.className}`}
+          >
             {storageStatus.label}
           </span>
-          <span className="text-[10px] text-neutral-500">{storageStatus.detail}</span>
+          <span className="text-[10px] text-neutral-500">
+            {storageStatus.detail}
+          </span>
         </div>
       </div>
       <Field label="Facebook Pixel ID">
@@ -1026,9 +1056,15 @@ function SeoModal({ onClose }: ModalProps) {
   const descriptionLength = s.description.trim().length;
   const ogValue = s.ogImage.trim();
   const faviconValue = s.faviconUrl.trim();
-  const hasBadOgImage = Boolean(ogValue) && !/^https?:\/\//i.test(ogValue) && !/^\//.test(ogValue);
-  const hasBadFavicon = Boolean(faviconValue) && !/^https?:\/\//i.test(faviconValue) && !/^\//.test(faviconValue) && !/^data:image\//i.test(faviconValue);
-  const hasBadSchema = !s.schemaType.trim() || !/^[A-Za-z][A-Za-z0-9]+$/.test(s.schemaType.trim());
+  const hasBadOgImage =
+    Boolean(ogValue) && !/^https?:\/\//i.test(ogValue) && !/^\//.test(ogValue);
+  const hasBadFavicon =
+    Boolean(faviconValue) &&
+    !/^https?:\/\//i.test(faviconValue) &&
+    !/^\//.test(faviconValue) &&
+    !/^data:image\//i.test(faviconValue);
+  const hasBadSchema =
+    !s.schemaType.trim() || !/^[A-Za-z][A-Za-z0-9]+$/.test(s.schemaType.trim());
 
   return (
     <AdminModal
@@ -1076,7 +1112,8 @@ function SeoModal({ onClose }: ModalProps) {
           />
           {hasBadOgImage && (
             <p className="text-[11px] font-medium text-amber-600">
-              OG Image nên là đường dẫn tương đối /ảnh.jpg hoặc URL tuyệt đối https://...
+              OG Image nên là đường dẫn tương đối /ảnh.jpg hoặc URL tuyệt đối
+              https://...
             </p>
           )}
           <input
@@ -1098,9 +1135,8 @@ function SeoModal({ onClose }: ModalProps) {
           <button
             type="button"
             onClick={(event) => {
-              const target = event.currentTarget.previousElementSibling as
-                | HTMLInputElement
-                | null;
+              const target = event.currentTarget
+                .previousElementSibling as HTMLInputElement | null;
               target?.click();
             }}
             className="rounded-lg border border-neutral-300 px-3 py-2 text-xs font-bold"
@@ -1111,7 +1147,9 @@ function SeoModal({ onClose }: ModalProps) {
             <div className="overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50">
               <img
                 src={
-                  /^https?:\/\//i.test(s.ogImage.trim()) || /^\//.test(s.ogImage.trim()) || /^data:image\//i.test(s.ogImage.trim())
+                  /^https?:\/\//i.test(s.ogImage.trim()) ||
+                  /^\//.test(s.ogImage.trim()) ||
+                  /^data:image\//i.test(s.ogImage.trim())
                     ? s.ogImage.trim()
                     : ""
                 }
@@ -1174,7 +1212,8 @@ function SeoModal({ onClose }: ModalProps) {
       </Field>
       {hasBadSchema && (
         <p className="-mt-2 text-[11px] font-medium text-amber-600">
-          Schema nên là dạng chuẩn Schema.org, ví dụ: EducationalOrganization, Organization, WebSite
+          Schema nên là dạng chuẩn Schema.org, ví dụ: EducationalOrganization,
+          Organization, WebSite
         </p>
       )}
       <SaveHint />
@@ -1323,17 +1362,20 @@ const TEMPLATE_VARIABLES = [
   {
     key: "rank",
     example: "VIP",
-    meaning: "Xếp hạng lead do AI chấm từ mức độ quan tâm và hành vi trên trang.",
+    meaning:
+      "Xếp hạng lead do AI chấm từ mức độ quan tâm và hành vi trên trang.",
   },
   {
     key: "recommendation",
     example: "Gọi tư vấn ngay",
-    meaning: "Khuyến nghị hành động cho sales: gọi, nhắn Zalo, hẹn tư vấn, hoặc xác minh lead.",
+    meaning:
+      "Khuyến nghị hành động cho sales: gọi, nhắn Zalo, hẹn tư vấn, hoặc xác minh lead.",
   },
   {
     key: "details",
     example: "Khách xem kỹ phần lương thực tập và đầu ra nghề nghiệp.",
-    meaning: "Mô tả chi tiết lý do AI đánh giá, thường là gợi ý hành vi / trải nghiệm trên trang.",
+    meaning:
+      "Mô tả chi tiết lý do AI đánh giá, thường là gợi ý hành vi / trải nghiệm trên trang.",
   },
   {
     key: "timeOnPage",
@@ -1343,22 +1385,26 @@ const TEMPLATE_VARIABLES = [
   {
     key: "firstInteraction",
     example: "3 giây",
-    meaning: "Thời gian tới lần tương tác đầu tiên: càng nhanh thì lead càng có tín hiệu quyết định sớm.",
+    meaning:
+      "Thời gian tới lần tương tác đầu tiên: càng nhanh thì lead càng có tín hiệu quyết định sớm.",
   },
   {
     key: "scrollDepth",
     example: "74%",
-    meaning: "Mức độ cuộn trang; khi cao và kéo dài cho thấy người dùng đã đọc nội dung sâu.",
+    meaning:
+      "Mức độ cuộn trang; khi cao và kéo dài cho thấy người dùng đã đọc nội dung sâu.",
   },
   {
     key: "focusSection",
     example: "lương_thuc_tap",
-    meaning: "Phần nội dung mà khách dừng lâu nhất như ngành học, học phí, lương thực tập.",
+    meaning:
+      "Phần nội dung mà khách dừng lâu nhất như ngành học, học phí, lương thực tập.",
   },
   {
     key: "device",
     example: "iPhone 15",
-    meaning: "Thiết bị đang dùng giúp nhận diện mức độ mobile-first hoặc niềm tin sản phẩm.",
+    meaning:
+      "Thiết bị đang dùng giúp nhận diện mức độ mobile-first hoặc niềm tin sản phẩm.",
   },
   {
     key: "os",
@@ -1373,12 +1419,14 @@ const TEMPLATE_VARIABLES = [
   {
     key: "network",
     example: "5G",
-    meaning: "Mạng đang truy cập, giúp đánh giá mức độ ổn định và sự chú ý khi dùng điện thoại.",
+    meaning:
+      "Mạng đang truy cập, giúp đánh giá mức độ ổn định và sự chú ý khi dùng điện thoại.",
   },
   {
     key: "battery",
     example: "78% · đang sạc",
-    meaning: "Mức pin và trạng thái sạc cho biết lead có đang thao tác nhanh hay cần nhắn lại sau.",
+    meaning:
+      "Mức pin và trạng thái sạc cho biết lead có đang thao tác nhanh hay cần nhắn lại sau.",
   },
   {
     key: "screen",
@@ -1398,12 +1446,14 @@ const TEMPLATE_VARIABLES = [
   {
     key: "campaign",
     example: "duhoc_q4_2026",
-    meaning: "Tên chiến dịch quảng cáo, rất quan trọng để so sánh hiệu quả từng chiến dịch.",
+    meaning:
+      "Tên chiến dịch quảng cáo, rất quan trọng để so sánh hiệu quả từng chiến dịch.",
   },
   {
     key: "content",
     example: "ads_variant_a",
-    meaning: "Biến thể nội dung quảng cáo; dùng để biết bài nào hoạt động tốt hơn.",
+    meaning:
+      "Biến thể nội dung quảng cáo; dùng để biết bài nào hoạt động tốt hơn.",
   },
   {
     key: "term",
@@ -1413,12 +1463,14 @@ const TEMPLATE_VARIABLES = [
   {
     key: "city",
     example: "Nghệ An",
-    meaning: "Tỉnh / thành phố người dùng đã điền trên form, dùng để cá nhân hóa call script.",
+    meaning:
+      "Tỉnh / thành phố người dùng đã điền trên form, dùng để cá nhân hóa call script.",
   },
   {
     key: "major",
     example: "Điện tử công nghiệp",
-    meaning: "Ngành quan tâm, dùng để đưa ra gợi ý phù hợp với nhu cầu thật của khách.",
+    meaning:
+      "Ngành quan tâm, dùng để đưa ra gợi ý phù hợp với nhu cầu thật của khách.",
   },
   {
     key: "score",
@@ -1428,12 +1480,14 @@ const TEMPLATE_VARIABLES = [
   {
     key: "risk",
     example: "low",
-    meaning: "Mức độ rủi ro: low, review, high. Có thể dùng để xác định mức độ xác minh trước khi gọi.",
+    meaning:
+      "Mức độ rủi ro: low, review, high. Có thể dùng để xác định mức độ xác minh trước khi gọi.",
   },
   {
     key: "reasons",
     example: "Thời gian điền form dưới 4 giây; cuộn 74%",
-    meaning: "Cụm lý do AI đánh giá lead, thường dùng để giải thích vì sao lead được xếp hạng như vậy.",
+    meaning:
+      "Cụm lý do AI đánh giá lead, thường dùng để giải thích vì sao lead được xếp hạng như vậy.",
   },
 ] as const;
 
@@ -1447,12 +1501,14 @@ const SALE_ADVICE_PRESET_FILTERS = [
 const SALE_ADVICE_PRESET_GROUPS = [
   {
     title: "Khởi động lead mới",
-    description: "Mẫu dùng cho lead vừa tiếp cận, cần định hướng nhanh và giữ nhịp tư vấn.",
+    description:
+      "Mẫu dùng cho lead vừa tiếp cận, cần định hướng nhanh và giữ nhịp tư vấn.",
     filter: "industry",
     presets: [
       {
         label: "Sales Premium",
-        description: "Tổng hợp tín hiệu lead bằng ngôn ngữ chuyên nghiệp, rõ trọng tâm.",
+        description:
+          "Tổng hợp tín hiệu lead bằng ngôn ngữ chuyên nghiệp, rõ trọng tâm.",
         saleAdvice:
           "⭐ {rank} · {recommendation}\n📍 {city} · {major}\n🧠 {details}\n📱 {device} · {os} · {browser}\n📡 {network} · {battery}\n🎯 {source} / {medium} / {campaign}",
         behaviorSummary:
@@ -1465,14 +1521,12 @@ const SALE_ADVICE_PRESET_GROUPS = [
       {
         label: "CRM Simple",
         description: "Dạng tối giản cho CRM, dễ lưu, dễ đọc và dễ chuyển sale.",
-        saleAdvice:
-          "{rank} · {recommendation}\n{city} · {major}\n{details}",
+        saleAdvice: "{rank} · {recommendation}\n{city} · {major}\n{details}",
         behaviorSummary:
           "{timeOnPage} · {firstInteraction} · {scrollDepth} · {focusSection}\n{details}",
         deviceTechInfo:
           "{device}\n{os}\n{browser}\n{network}\n{battery}\n{screen}",
-        trafficAdsSource:
-          "{source}\n{medium}\n{campaign}\n{content}\n{term}",
+        trafficAdsSource: "{source}\n{medium}\n{campaign}\n{content}\n{term}",
       },
       {
         label: "Call Script",
@@ -1490,24 +1544,26 @@ const SALE_ADVICE_PRESET_GROUPS = [
   },
   {
     title: "Lo lắng / đối kháng",
-    description: "Dành cho lead sợ chi phí, lo tiếng Trung, hoặc đang so sánh giữa nhiều lựa chọn.",
+    description:
+      "Dành cho lead sợ chi phí, lo tiếng Trung, hoặc đang so sánh giữa nhiều lựa chọn.",
     filter: "industry",
     presets: [
       {
         label: "Ngân sách lo lắng",
-        description: "Chốt vào chi phí thực tế và giá trị đầu ra để gỡ tâm lý nghi ngờ.",
+        description:
+          "Chốt vào chi phí thực tế và giá trị đầu ra để gỡ tâm lý nghi ngờ.",
         saleAdvice:
           "💸 {rank} · {recommendation}\n📍 {city} · {major}\n🧠 {details}\n⚠️ Khách đang tập trung vào học phí, chi phí sinh hoạt và lợi ích thực tế của khóa học.\n👉 Nên giải thích rõ học phí 0Đ, lộ trình chi tiết, lương thực tập và đầu ra nghề nghiệp.",
         behaviorSummary:
           "⏱️ {timeOnPage} · {firstInteraction} · {scrollDepth}\n🎯 {focusSection}\n🧠 {details}",
         deviceTechInfo:
           "📱 {device}\n🧩 {os}\n🌐 {browser}\n📡 {network}\n🔋 {battery}",
-        trafficAdsSource:
-          "🎯 {source}\n📣 {medium}\n🏷️ {campaign}\n🔍 {term}",
+        trafficAdsSource: "🎯 {source}\n📣 {medium}\n🏷️ {campaign}\n🔍 {term}",
       },
       {
         label: "Sợ tiếng Trung",
-        description: "Giải quyết nỗi lo ngôn ngữ và khiến khách cảm thấy được hỗ trợ từ đầu.",
+        description:
+          "Giải quyết nỗi lo ngôn ngữ và khiến khách cảm thấy được hỗ trợ từ đầu.",
         saleAdvice:
           "🗣️ {rank} · {recommendation}\n📍 {city} · {major}\n🧠 {details}\n✅ Khách đang lo ngại về điều kiện tiếng Trung.\n👉 Nên nhấn mạnh lộ trình học từ cơ bản, hỗ trợ từ đầu, không cần giỏi ngay.",
         behaviorSummary:
@@ -1519,26 +1575,28 @@ const SALE_ADVICE_PRESET_GROUPS = [
       },
       {
         label: "Đang so sánh ngành",
-        description: "Khi khách đang cân nhắc giữa 2–3 lựa chọn, cần so sánh dữ liệu rõ ràng.",
+        description:
+          "Khi khách đang cân nhắc giữa 2–3 lựa chọn, cần so sánh dữ liệu rõ ràng.",
         saleAdvice:
           "📊 {rank} · {recommendation}\n📍 {city} · {major}\n🧠 {details}\n🔁 Khách đang so sánh ngành và đang cân nhắc giữa 2–3 lựa chọn.\n👉 Nên so sánh thu nhập, thời gian học, lộ trình và cơ hội việc làm thực tế.",
         behaviorSummary:
           "⏱️ {timeOnPage} · {firstInteraction} · {scrollDepth}\n🎯 {focusSection}\n🧠 {details}",
         deviceTechInfo:
           "📱 {device}\n🧩 {os}\n🌐 {browser}\n📡 {network}\n📐 {screen}",
-        trafficAdsSource:
-          "🎯 {source}\n📣 {medium}\n🏷️ {campaign}\n🔍 {term}",
+        trafficAdsSource: "🎯 {source}\n📣 {medium}\n🏷️ {campaign}\n🔍 {term}",
       },
     ],
   },
   {
     title: "Theo nguồn tiếp cận",
-    description: "Nội dung nhắn ngắn phù hợp với từng kênh khách đến từ Facebook, Google, mobile hoặc desktop.",
+    description:
+      "Nội dung nhắn ngắn phù hợp với từng kênh khách đến từ Facebook, Google, mobile hoặc desktop.",
     filter: "traffic",
     presets: [
       {
         label: "Lead từ Facebook",
-        description: "Ngắn gọn, trực tiếp, thân thiện để chuyển lead từ social thành cuộc gọi nhanh.",
+        description:
+          "Ngắn gọn, trực tiếp, thân thiện để chuyển lead từ social thành cuộc gọi nhanh.",
         saleAdvice:
           "📘 {rank} · {recommendation}\n📍 {city} · {major}\n🧠 {details}\n📲 Khách đến từ Facebook, nên ưu tiên nhắn tin ngắn, trực tiếp và dễ hiểu.\n👉 Gửi Zalo + ưu đãi rõ ràng + lịch tư vấn 1:1.",
         behaviorSummary:
@@ -1550,7 +1608,8 @@ const SALE_ADVICE_PRESET_GROUPS = [
       },
       {
         label: "Lead từ Google Ads",
-        description: "Dùng khi khách đã có nhu cầu cụ thể và cần tạo cảm giác thuyết phục thực tế.",
+        description:
+          "Dùng khi khách đã có nhu cầu cụ thể và cần tạo cảm giác thuyết phục thực tế.",
         saleAdvice:
           "🔎 {rank} · {recommendation}\n📍 {city} · {major}\n🧠 {details}\n🎯 Khách đến từ Google Ads, đã tìm kiếm theo nhu cầu cụ thể.\n👉 Nên tập trung vào lợi ích thực tế, đầu ra, chi phí và kế hoạch học.",
         behaviorSummary:
@@ -1562,38 +1621,40 @@ const SALE_ADVICE_PRESET_GROUPS = [
       },
       {
         label: "Lead mobile",
-        description: "Phù hợp với lead đang dùng điện thoại, cần ngắn, dễ nhắn, dễ chốt lịch.",
+        description:
+          "Phù hợp với lead đang dùng điện thoại, cần ngắn, dễ nhắn, dễ chốt lịch.",
         saleAdvice:
           "📱 {rank} · {recommendation}\n📍 {city} · {major}\n🧠 {details}\n📲 Khách đang dùng điện thoại, nên ưu tiên nội dung ngắn gọn và CTA rõ.\n👉 Gửi Zalo, ảnh minh họa và hẹn gọi ngắn trong 1–2 phút.",
         behaviorSummary:
           "⏱️ {timeOnPage} · {firstInteraction} · {scrollDepth}\n🎯 {focusSection}\n🧠 {details}",
         deviceTechInfo:
           "📱 {device}\n🧩 {os}\n🌐 {browser}\n📡 {network}\n📐 {screen}\n🔋 {battery}",
-        trafficAdsSource:
-          "🎯 {source}\n📣 {medium}\n🏷️ {campaign}\n🔍 {term}",
+        trafficAdsSource: "🎯 {source}\n📣 {medium}\n🏷️ {campaign}\n🔍 {term}",
       },
       {
         label: "Lead desktop",
-        description: "Phù hợp lead đọc kỹ, cần tư vấn chuyên sâu và hình ảnh tin cậy hơn.",
+        description:
+          "Phù hợp lead đọc kỹ, cần tư vấn chuyên sâu và hình ảnh tin cậy hơn.",
         saleAdvice:
           "💻 {rank} · {recommendation}\n📍 {city} · {major}\n🧠 {details}\n🖥️ Khách đang dùng desktop, có xu hướng đọc kỹ và yêu cầu thông tin sâu.\n👉 Nêu rõ quy trình, đầu ra, môi trường học và độ tin cậy của chương trình.",
         behaviorSummary:
           "⏱️ {timeOnPage} · {firstInteraction} · {scrollDepth}\n🎯 {focusSection}\n🧠 {details}",
         deviceTechInfo:
           "💻 {device}\n🧩 {os}\n🌐 {browser}\n📡 {network}\n📐 {screen}",
-        trafficAdsSource:
-          "🎯 {source}\n📣 {medium}\n🏷️ {campaign}\n🔍 {term}",
+        trafficAdsSource: "🎯 {source}\n📣 {medium}\n🏷️ {campaign}\n🔍 {term}",
       },
     ],
   },
   {
     title: "VIP / cao cấp",
-    description: "Cho lead có tín hiệu rõ và đã sẵn sàng cho tư vấn 1:1, thuyết phục chuẩn sales Việt Nam.",
+    description:
+      "Cho lead có tín hiệu rõ và đã sẵn sàng cho tư vấn 1:1, thuyết phục chuẩn sales Việt Nam.",
     filter: "premium",
     presets: [
       {
         label: "Premium Executive",
-        description: "Mẫu cao cấp cho lead có tín hiệu quan tâm nghiêm túc và cần chốt lịch ngay.",
+        description:
+          "Mẫu cao cấp cho lead có tín hiệu quan tâm nghiêm túc và cần chốt lịch ngay.",
         saleAdvice:
           "⭐ {rank} · {recommendation}\n📍 {city} · {major}\n🧠 {details}\n🔑 Lead này có tín hiệu quan tâm nghiêm túc, nên ưu tiên tư vấn 1:1 và xây dựng lộ trình rõ ràng ngay trong lần đầu liên hệ.",
         behaviorSummary:
@@ -1605,7 +1666,8 @@ const SALE_ADVICE_PRESET_GROUPS = [
       },
       {
         label: "VIP Sales Việt Nam",
-        description: "Phong cách chuyên nghiệp, gọn, sát thị trường và dễ dùng cho sales Việt Nam.",
+        description:
+          "Phong cách chuyên nghiệp, gọn, sát thị trường và dễ dùng cho sales Việt Nam.",
         saleAdvice:
           "🏆 {rank} · {recommendation}\n📍 {city} · {major}\n🧠 {details}\n✅ Đây là lead có chất lượng cao, phù hợp tư vấn trực tiếp theo hướng chăm sóc và khóa học thực tế, không cần nhắn dài.",
         behaviorSummary:
@@ -1617,27 +1679,27 @@ const SALE_ADVICE_PRESET_GROUPS = [
       },
       {
         label: "Chốt lịch 1:1",
-        description: "Mẫu cao cấp cho lead đã sẵn sàng và cần hướng dẫn chốt lịch trực tiếp.",
+        description:
+          "Mẫu cao cấp cho lead đã sẵn sàng và cần hướng dẫn chốt lịch trực tiếp.",
         saleAdvice:
           "📌 {rank} · {recommendation}\n📍 {city} · {major}\n🧠 {details}\n🎯 Lead đã thể hiện nhu cầu rõ ràng, nên ưu tiên tư vấn trực tiếp, ngắn gọn, đúng trọng tâm và không lan man.\n👉 Mời đặt lịch tư vấn 1:1 ngay trong ngày để có lộ trình rõ ràng.",
         behaviorSummary:
           "⏱️ {timeOnPage} · {firstInteraction} · {scrollDepth}\n🎯 {focusSection}\n🧠 {details}",
         deviceTechInfo:
           "📱 {device}\n🧩 {os}\n🌐 {browser}\n📡 {network}\n🔋 {battery}",
-        trafficAdsSource:
-          "🎯 {source}\n📣 {medium}\n🏷️ {campaign}\n🔍 {term}",
+        trafficAdsSource: "🎯 {source}\n📣 {medium}\n🏷️ {campaign}\n🔍 {term}",
       },
       {
         label: "Tư vấn chuyên sâu",
-        description: "Cho nhu cầu cần giải thích kỹ về ngành, lộ trình và đầu ra để tạo niềm tin.",
+        description:
+          "Cho nhu cầu cần giải thích kỹ về ngành, lộ trình và đầu ra để tạo niềm tin.",
         saleAdvice:
           "🧭 {rank} · {recommendation}\n📍 {city} · {major}\n🧠 {details}\n📘 Khách đang cần tư vấn chi tiết về ngành, đầu ra và lộ trình học. Hãy giải thích dựa trên thực tế, không dùng lời quá quảng cáo.",
         behaviorSummary:
           "⏱️ {timeOnPage} · {firstInteraction} · {scrollDepth}\n🎯 {focusSection}\n🧠 {details}",
         deviceTechInfo:
           "📱 {device}\n🧩 {os}\n🌐 {browser}\n📡 {network}\n📐 {screen}",
-        trafficAdsSource:
-          "🎯 {source}\n📣 {medium}\n🏷️ {campaign}\n🔍 {term}",
+        trafficAdsSource: "🎯 {source}\n📣 {medium}\n🏷️ {campaign}\n🔍 {term}",
       },
     ],
   },
@@ -1658,9 +1720,11 @@ function PreviewTemplateCard({
   children: React.ReactNode;
 }) {
   const toneClasses = {
-    emerald: "border-emerald-200 bg-emerald-50 dark:border-emerald-500/20 dark:bg-emerald-500/10",
+    emerald:
+      "border-emerald-200 bg-emerald-50 dark:border-emerald-500/20 dark:bg-emerald-500/10",
     sky: "border-sky-200 bg-sky-50 dark:border-sky-500/20 dark:bg-sky-500/10",
-    slate: "border-neutral-200 bg-white dark:border-white/10 dark:bg-neutral-900",
+    slate:
+      "border-neutral-200 bg-white dark:border-white/10 dark:bg-neutral-900",
   };
   const headingClasses = {
     emerald: "text-emerald-700 dark:text-emerald-300",
@@ -1670,7 +1734,9 @@ function PreviewTemplateCard({
 
   return (
     <div className={`rounded-2xl border p-3 shadow-sm ${toneClasses[tone]}`}>
-      <p className={`mb-2 text-[10px] font-bold uppercase tracking-[0.2em] ${headingClasses[tone]}`}>
+      <p
+        className={`mb-2 text-[10px] font-bold uppercase tracking-[0.2em] ${headingClasses[tone]}`}
+      >
         {title}
       </p>
       <div className="text-[11px] leading-relaxed text-slate-700 dark:text-slate-100">
@@ -1686,7 +1752,8 @@ function SalesAdviceModal({ onClose }: ModalProps) {
   const [saveMessage, setSaveMessage] = useState("Chưa lưu lần cuối");
   const [saving, setSaving] = useState(false);
   const [copiedPreset, setCopiedPreset] = useState<string | null>(null);
-  const [presetFilter, setPresetFilter] = useState<(typeof SALE_ADVICE_PRESET_FILTERS)[number]["key"]>("all");
+  const [presetFilter, setPresetFilter] =
+    useState<(typeof SALE_ADVICE_PRESET_FILTERS)[number]["key"]>("all");
 
   const filteredPresetGroups = SALE_ADVICE_PRESET_GROUPS.filter(
     (group) => presetFilter === "all" || group.filter === presetFilter,
@@ -1703,7 +1770,9 @@ function SalesAdviceModal({ onClose }: ModalProps) {
             : "đã lưu local thành công";
         setSaveMessage(`Cấu hình ${modeText}.`);
       } else {
-        setSaveMessage("Lưu cục bộ thành công, nhưng đồng bộ dữ liệu chưa hoàn tất.");
+        setSaveMessage(
+          "Lưu cục bộ thành công, nhưng đồng bộ dữ liệu chưa hoàn tất.",
+        );
       }
     } catch {
       setSaveMessage("Không thể lưu cấu hình lúc này. Vui lòng thử lại.");
@@ -1747,7 +1816,13 @@ function SalesAdviceModal({ onClose }: ModalProps) {
         document.body.removeChild(helper);
       }
       setCopiedPreset(preset.label);
-      window.setTimeout(() => setCopiedPreset((current) => (current === preset.label ? null : current)), 1200);
+      window.setTimeout(
+        () =>
+          setCopiedPreset((current) =>
+            current === preset.label ? null : current,
+          ),
+        1200,
+      );
     } catch {
       setCopiedPreset("copy-failed");
       window.setTimeout(() => setCopiedPreset(null), 1200);
@@ -1781,7 +1856,13 @@ function SalesAdviceModal({ onClose }: ModalProps) {
         document.body.removeChild(helper);
       }
       setCopiedPreset("all-templates");
-      window.setTimeout(() => setCopiedPreset((current) => (current === "all-templates" ? null : current)), 1200);
+      window.setTimeout(
+        () =>
+          setCopiedPreset((current) =>
+            current === "all-templates" ? null : current,
+          ),
+        1200,
+      );
     } catch {
       setCopiedPreset("copy-failed");
       window.setTimeout(() => setCopiedPreset(null), 1200);
@@ -1800,7 +1881,10 @@ function SalesAdviceModal({ onClose }: ModalProps) {
             Webhook payload đang gửi
           </p>
           <p className="text-[11px] leading-relaxed text-amber-900 dark:text-amber-100">
-            Các trường <strong>sale_advice</strong>, <strong>behavior_summary</strong>, <strong>device_tech_info</strong>, <strong>traffic_ads_source</strong> đã được đính kèm vào lead submit và sẽ đi ra webhook theo nhịp real-time.
+            Các trường <strong>sale_advice</strong>,{" "}
+            <strong>behavior_summary</strong>, <strong>device_tech_info</strong>
+            , <strong>traffic_ads_source</strong> đã được đính kèm vào lead
+            submit và sẽ đi ra webhook theo nhịp real-time.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -1848,7 +1932,9 @@ function SalesAdviceModal({ onClose }: ModalProps) {
             <TextArea
               value={salesAdvice.saleAdviceTemplate}
               onChange={(e) =>
-                update((d) => (d.salesAdvice.saleAdviceTemplate = e.target.value))
+                update(
+                  (d) => (d.salesAdvice.saleAdviceTemplate = e.target.value),
+                )
               }
             />
           </Field>
@@ -1856,7 +1942,10 @@ function SalesAdviceModal({ onClose }: ModalProps) {
             <TextArea
               value={salesAdvice.behaviorSummaryTemplate}
               onChange={(e) =>
-                update((d) => (d.salesAdvice.behaviorSummaryTemplate = e.target.value))
+                update(
+                  (d) =>
+                    (d.salesAdvice.behaviorSummaryTemplate = e.target.value),
+                )
               }
             />
           </Field>
@@ -1864,7 +1953,10 @@ function SalesAdviceModal({ onClose }: ModalProps) {
             <TextArea
               value={salesAdvice.deviceTechInfoTemplate}
               onChange={(e) =>
-                update((d) => (d.salesAdvice.deviceTechInfoTemplate = e.target.value))
+                update(
+                  (d) =>
+                    (d.salesAdvice.deviceTechInfoTemplate = e.target.value),
+                )
               }
             />
           </Field>
@@ -1872,7 +1964,10 @@ function SalesAdviceModal({ onClose }: ModalProps) {
             <TextArea
               value={salesAdvice.trafficAdsSourceTemplate}
               onChange={(e) =>
-                update((d) => (d.salesAdvice.trafficAdsSourceTemplate = e.target.value))
+                update(
+                  (d) =>
+                    (d.salesAdvice.trafficAdsSourceTemplate = e.target.value),
+                )
               }
             />
           </Field>
@@ -1887,7 +1982,9 @@ function SalesAdviceModal({ onClose }: ModalProps) {
                   className="rounded-lg border border-amber-200 bg-white p-2 dark:border-white/10 dark:bg-neutral-900"
                 >
                   <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-neutral-500">
-                    {'{'}{variable.key}{'}'}
+                    {"{"}
+                    {variable.key}
+                    {"}"}
                   </p>
                   <p className="mt-1 text-[11px] font-semibold text-slate-800 dark:text-slate-200">
                     {variable.example}
@@ -1899,7 +1996,23 @@ function SalesAdviceModal({ onClose }: ModalProps) {
               ))}
             </div>
             <p className="mt-3 text-[11px] leading-relaxed text-neutral-700 dark:text-neutral-200">
-              Mục tiêu: dùng biến để mô tả hành vi thật của khách, chuyển đổi data tracking thành câu văn phục vụ call script, nhắn tin, hoặc webhook CRM. Mỗi biến nên được dùng đúng mục đích: <span className="font-semibold">rank / recommendation</span> cho quyết định, <span className="font-semibold">timeOnPage / scrollDepth / focusSection</span> cho hành vi, <span className="font-semibold">device / os / browser / network</span> cho bối cảnh kỹ thuật, <span className="font-semibold">source / medium / campaign / content / term</span> cho traffic.
+              Mục tiêu: dùng biến để mô tả hành vi thật của khách, chuyển đổi
+              data tracking thành câu văn phục vụ call script, nhắn tin, hoặc
+              webhook CRM. Mỗi biến nên được dùng đúng mục đích:{" "}
+              <span className="font-semibold">rank / recommendation</span> cho
+              quyết định,{" "}
+              <span className="font-semibold">
+                timeOnPage / scrollDepth / focusSection
+              </span>{" "}
+              cho hành vi,{" "}
+              <span className="font-semibold">
+                device / os / browser / network
+              </span>{" "}
+              cho bối cảnh kỹ thuật,{" "}
+              <span className="font-semibold">
+                source / medium / campaign / content / term
+              </span>{" "}
+              cho traffic.
             </p>
           </div>
 
@@ -1933,7 +2046,9 @@ function SalesAdviceModal({ onClose }: ModalProps) {
                   onClick={() => void handleCopyAllTemplates()}
                   className="ml-auto rounded-lg border border-sky-200 bg-sky-50 px-2.5 py-1.5 text-[9px] font-bold uppercase tracking-[0.12em] text-sky-700 dark:border-sky-500/20 dark:bg-sky-500/10 dark:text-sky-300"
                 >
-                  {copiedPreset === "all-templates" ? "Copied" : "Copy all 4 template"}
+                  {copiedPreset === "all-templates"
+                    ? "Copied"
+                    : "Copy all 4 template"}
                 </button>
               </div>
             </div>
@@ -1958,22 +2073,32 @@ function SalesAdviceModal({ onClose }: ModalProps) {
                   <div className="grid gap-2.5 md:grid-cols-2 xl:grid-cols-3">
                     {group.presets.map((preset) => {
                       const leadTarget =
-                        preset.label.includes("Facebook") || preset.label.includes("Google")
+                        preset.label.includes("Facebook") ||
+                        preset.label.includes("Google")
                           ? "Social / Search"
-                          : preset.label.includes("mobile") || preset.label.includes("desktop")
+                          : preset.label.includes("mobile") ||
+                              preset.label.includes("desktop")
                             ? "Device UX"
-                            : preset.label.includes("VIP") || preset.label.includes("Premium") || preset.label.includes("Executive")
+                            : preset.label.includes("VIP") ||
+                                preset.label.includes("Premium") ||
+                                preset.label.includes("Executive")
                               ? "VIP / Premium"
-                              : preset.label.includes("Ngân sách") || preset.label.includes("tiếng Trung") || preset.label.includes("so sánh")
+                              : preset.label.includes("Ngân sách") ||
+                                  preset.label.includes("tiếng Trung") ||
+                                  preset.label.includes("so sánh")
                                 ? "Giải quyết tâm lý"
                                 : "Lead tổng quát";
 
                       const brandStyle =
-                        preset.label.includes("VIP") || preset.label.includes("Premium") || preset.label.includes("Executive")
+                        preset.label.includes("VIP") ||
+                        preset.label.includes("Premium") ||
+                        preset.label.includes("Executive")
                           ? "Brand Premium"
-                          : preset.label.includes("Facebook") || preset.label.includes("Google")
+                          : preset.label.includes("Facebook") ||
+                              preset.label.includes("Google")
                             ? "Brand Social"
-                            : preset.label.includes("mobile") || preset.label.includes("desktop")
+                            : preset.label.includes("mobile") ||
+                                preset.label.includes("desktop")
                               ? "Brand Mobile"
                               : "Brand Sales";
 
@@ -2025,17 +2150,23 @@ function SalesAdviceModal({ onClose }: ModalProps) {
                                 }}
                                 className="rounded-md border border-neutral-300 bg-white px-2 py-1 text-[9px] font-bold uppercase tracking-[0.12em] text-neutral-700 transition hover:border-neutral-900 hover:text-neutral-900 dark:border-white/10 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:border-white/30"
                               >
-                                {copiedPreset === preset.label ? "Copied" : "Copy"}
+                                {copiedPreset === preset.label
+                                  ? "Copied"
+                                  : "Copy"}
                               </button>
                             </div>
                             <button
                               type="button"
                               onClick={() =>
                                 update((draft) => {
-                                  draft.salesAdvice.saleAdviceTemplate = preset.saleAdvice;
-                                  draft.salesAdvice.behaviorSummaryTemplate = preset.behaviorSummary;
-                                  draft.salesAdvice.deviceTechInfoTemplate = preset.deviceTechInfo;
-                                  draft.salesAdvice.trafficAdsSourceTemplate = preset.trafficAdsSource;
+                                  draft.salesAdvice.saleAdviceTemplate =
+                                    preset.saleAdvice;
+                                  draft.salesAdvice.behaviorSummaryTemplate =
+                                    preset.behaviorSummary;
+                                  draft.salesAdvice.deviceTechInfoTemplate =
+                                    preset.deviceTechInfo;
+                                  draft.salesAdvice.trafficAdsSourceTemplate =
+                                    preset.trafficAdsSource;
                                 })
                               }
                               className="mt-2 w-full rounded-lg border border-neutral-900 bg-neutral-900 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-white transition hover:bg-neutral-700 dark:border-white/15 dark:bg-white/10 dark:text-white dark:hover:bg-white/15"
@@ -2269,40 +2400,35 @@ function EmailModal({ onClose }: ModalProps) {
       label: "VIP Alert",
       accent: "#0f172a",
       subject: "[Lead ưu tiên] {name} • {city} • {major} • {phone}",
-      body:
-        "Lead chất lượng vừa đăng ký trên website.\n\nKhách hàng: {name}\nSĐT: {phone}\nKhu vực: {city}\nNgành quan tâm: {major}\nNguồn: {source}\nAI score: {ai_score}\nThời điểm: {timestamp}\n\nVui lòng gọi lại trong 10 phút để chốt lịch tư vấn, ưu tiên xử lý theo mức độ phù hợp và không bỏ lỡ cơ hội tốt nhất.",
+      body: "Lead chất lượng vừa đăng ký trên website.\n\nKhách hàng: {name}\nSĐT: {phone}\nKhu vực: {city}\nNgành quan tâm: {major}\nNguồn: {source}\nAI score: {ai_score}\nThời điểm: {timestamp}\n\nVui lòng gọi lại trong 10 phút để chốt lịch tư vấn, ưu tiên xử lý theo mức độ phù hợp và không bỏ lỡ cơ hội tốt nhất.",
     },
     {
       id: "executive-brief",
       label: "Executive Brief",
       accent: "#1d4ed8",
       subject: "Lead mới – {name} | {major} | {source}",
-      body:
-        "Một lead tiềm năng mới vừa đăng ký.\n\nTên: {name}\nĐiện thoại: {phone}\nKhu vực: {city}\nNgành: {major}\nNguồn: {source}\nMức độ phù hợp: {ai_score}/100\nThời gian: {timestamp}\n\nƯu tiên contact ngay để chốt lịch tư vấn 1:1 và gợi ý lộ trình phù hợp nhất.",
+      body: "Một lead tiềm năng mới vừa đăng ký.\n\nTên: {name}\nĐiện thoại: {phone}\nKhu vực: {city}\nNgành: {major}\nNguồn: {source}\nMức độ phù hợp: {ai_score}/100\nThời gian: {timestamp}\n\nƯu tiên contact ngay để chốt lịch tư vấn 1:1 và gợi ý lộ trình phù hợp nhất.",
     },
     {
       id: "warm-hand-off",
       label: "Warm Handoff",
       accent: "#0f766e",
       subject: "🚀 {name} đang quan tâm {major}",
-      body:
-        "Chào team tư vấn,\n\n{name} vừa để lại thông tin và đang quan tâm lĩnh vực {major}.\n\nThông tin nhanh:\n- SĐT: {phone}\n- Tỉnh thành: {city}\n- Nguồn: {source}\n- AI score: {ai_score}\n- Thời gian: {timestamp}\n\nHãy nhắn tin chào mời và chốt lịch tư vấn trong ngày để tối ưu tỷ lệ chuyển đổi.",
+      body: "Chào team tư vấn,\n\n{name} vừa để lại thông tin và đang quan tâm lĩnh vực {major}.\n\nThông tin nhanh:\n- SĐT: {phone}\n- Tỉnh thành: {city}\n- Nguồn: {source}\n- AI score: {ai_score}\n- Thời gian: {timestamp}\n\nHãy nhắn tin chào mời và chốt lịch tư vấn trong ngày để tối ưu tỷ lệ chuyển đổi.",
     },
     {
       id: "sales-priority",
       label: "Sales Priority",
       accent: "#dc2626",
       subject: "⚡ Priority lead – {name} | {city} | {ai_score}/100",
-      body:
-        "Lead ưu tiên vừa đăng ký trên website.\n\nKhách hàng: {name}\nSĐT: {phone}\nTỉnh/Thành: {city}\nNgành: {major}\nNguồn: {source}\nĐiểm phù hợp: {ai_score}/100\n\nGọi ngay trong 10 phút, ưu tiên chốt lịch tư vấn và trao đổi lộ trình phù hợp.",
+      body: "Lead ưu tiên vừa đăng ký trên website.\n\nKhách hàng: {name}\nSĐT: {phone}\nTỉnh/Thành: {city}\nNgành: {major}\nNguồn: {source}\nĐiểm phù hợp: {ai_score}/100\n\nGọi ngay trong 10 phút, ưu tiên chốt lịch tư vấn và trao đổi lộ trình phù hợp.",
     },
     {
       id: "daily-sync",
       label: "Daily Sync",
       accent: "#c2410c",
       subject: "Daily sync • {name} • {major} • {city}",
-      body:
-        "Chào team,\n\n{name} vừa đăng ký trên website với nhu cầu {major} ở {city}.\n\nThông tin nhanh:\n• SĐT: {phone}\n• Nguồn: {source}\n• AI score: {ai_score}\n• Thời gian: {timestamp}\n\nHãy xử lý trong ca làm việc hiện tại để không mất lead chất lượng.",
+      body: "Chào team,\n\n{name} vừa đăng ký trên website với nhu cầu {major} ở {city}.\n\nThông tin nhanh:\n• SĐT: {phone}\n• Nguồn: {source}\n• AI score: {ai_score}\n• Thời gian: {timestamp}\n\nHãy xử lý trong ca làm việc hiện tại để không mất lead chất lượng.",
     },
   ] as const;
 
@@ -2312,49 +2438,46 @@ function EmailModal({ onClose }: ModalProps) {
       label: "Luxury Welcome",
       accent: "#0b1f3a",
       subject: "Cảm ơn {name} – Chúng tôi đã nhận được yêu cầu tư vấn của bạn",
-      body:
-        "Kính chào {name},\n\nCảm ơn anh/chị đã dành thời gian để lại thông tin trên website.\n\nChúng tôi đã nhận được nhu cầu tư vấn về ngành {major} tại {city}. Đội ngũ tư vấn của chúng tôi sẽ liên hệ qua số {phone} trong thời gian sớm nhất để tư vấn lộ trình phù hợp với mục tiêu nghề nghiệp và ngân sách của anh/chị.\n\nNếu anh/chị muốn được hỗ trợ nhanh hơn, vui lòng phản hồi email này hoặc giữ điện thoại sẵn sàng để tư vấn viên liên hệ trực tiếp.\n\nTrân trọng,\nĐội ngũ tư vấn chuyên nghiệp",
+      body: "Kính chào {name},\n\nCảm ơn anh/chị đã dành thời gian để lại thông tin trên website.\n\nChúng tôi đã nhận được nhu cầu tư vấn về ngành {major} tại {city}. Đội ngũ tư vấn của chúng tôi sẽ liên hệ qua số {phone} trong thời gian sớm nhất để tư vấn lộ trình phù hợp với mục tiêu nghề nghiệp và ngân sách của anh/chị.\n\nNếu anh/chị muốn được hỗ trợ nhanh hơn, vui lòng phản hồi email này hoặc giữ điện thoại sẵn sàng để tư vấn viên liên hệ trực tiếp.\n\nTrân trọng,\nĐội ngũ tư vấn chuyên nghiệp",
     },
     {
       id: "premium-guide",
       label: "Premium Guide",
       accent: "#1d4ed8",
       subject: "Thông tin của bạn đã được ghi nhận – {name}",
-      body:
-        "Xin chào {name},\n\nCảm ơn anh/chị đã dành thời gian để lại thông tin.\n\nChúng tôi đã nhận được nhu cầu về ngành {major} và đang chuẩn bị kết nối anh/chị với tư vấn viên phù hợp nhất.\n\nMọi thông tin trong quá trình tư vấn sẽ được hỗ trợ trực tiếp bởi đội ngũ chuyên nghiệp với quy trình rõ ràng, nhanh chóng và thân thiện.\n\nAnh/chị chỉ cần giữ điện thoại và email sẵn sàng; chúng tôi sẽ liên hệ trong thời gian sớm nhất.\n\nTrân trọng,\nĐội ngũ hỗ trợ khách hàng",
+      body: "Xin chào {name},\n\nCảm ơn anh/chị đã dành thời gian để lại thông tin.\n\nChúng tôi đã nhận được nhu cầu về ngành {major} và đang chuẩn bị kết nối anh/chị với tư vấn viên phù hợp nhất.\n\nMọi thông tin trong quá trình tư vấn sẽ được hỗ trợ trực tiếp bởi đội ngũ chuyên nghiệp với quy trình rõ ràng, nhanh chóng và thân thiện.\n\nAnh/chị chỉ cần giữ điện thoại và email sẵn sàng; chúng tôi sẽ liên hệ trong thời gian sớm nhất.\n\nTrân trọng,\nĐội ngũ hỗ trợ khách hàng",
     },
     {
       id: "trust-closer",
       label: "Trust Closer",
       accent: "#0f766e",
       subject: "Tư vấn viên sẽ liên hệ ngay với {name}",
-      body:
-        "Chào anh/chị {name},\n\nCảm ơn anh/chị đã quan tâm đến chương trình du học nghề Trung Quốc.\n\nChúng tôi đã ghi nhận thông tin: {city}, {major}, nguồn {source}. Team tư vấn của chúng tôi sẽ liên hệ đến số {phone} trong thời gian sớm nhất để tư vấn miễn phí, hỗ trợ lựa chọn lộ trình phù hợp và giải đáp các băn khoăn về học phí, điều kiện và thời gian nhập học.\n\nĐội ngũ tư vấn của chúng tôi luôn đồng hành cùng anh/chị từ khâu định hướng đến khi bắt đầu khóa học.\n\nTrân trọng,\nĐội ngũ tư vấn chuyên nghiệp",
+      body: "Chào anh/chị {name},\n\nCảm ơn anh/chị đã quan tâm đến chương trình du học nghề Trung Quốc.\n\nChúng tôi đã ghi nhận thông tin: {city}, {major}, nguồn {source}. Team tư vấn của chúng tôi sẽ liên hệ đến số {phone} trong thời gian sớm nhất để tư vấn miễn phí, hỗ trợ lựa chọn lộ trình phù hợp và giải đáp các băn khoăn về học phí, điều kiện và thời gian nhập học.\n\nĐội ngũ tư vấn của chúng tôi luôn đồng hành cùng anh/chị từ khâu định hướng đến khi bắt đầu khóa học.\n\nTrân trọng,\nĐội ngũ tư vấn chuyên nghiệp",
     },
     {
       id: "action-fast",
       label: "Action Fast",
       accent: "#d97706",
       subject: "Bạn đã hoàn tất bước đầu tiên – {name}",
-      body:
-        "Xin chào {name},\n\nCảm ơn anh/chị đã để lại thông tin trên website.\n\nChúng tôi đã nhận được yêu cầu và đang chuẩn bị liên hệ sớm nhất để tư vấn chi tiết theo nhu cầu của anh/chị.\n\nBạn chỉ cần giữ điện thoại sẵn sàng; tư vấn viên sẽ gọi tới {phone} trong thời gian ngắn nhất.\n\nNếu cần hỗ trợ ngay, hãy trả lời email này hoặc gọi hotline của chúng tôi để được hỗ trợ tức thì.\n\nTrân trọng,\nĐội ngũ tư vấn chuyên nghiệp",
+      body: "Xin chào {name},\n\nCảm ơn anh/chị đã để lại thông tin trên website.\n\nChúng tôi đã nhận được yêu cầu và đang chuẩn bị liên hệ sớm nhất để tư vấn chi tiết theo nhu cầu của anh/chị.\n\nBạn chỉ cần giữ điện thoại sẵn sàng; tư vấn viên sẽ gọi tới {phone} trong thời gian ngắn nhất.\n\nNếu cần hỗ trợ ngay, hãy trả lời email này hoặc gọi hotline của chúng tôi để được hỗ trợ tức thì.\n\nTrân trọng,\nĐội ngũ tư vấn chuyên nghiệp",
     },
     {
       id: "vip-roadmap",
       label: "VIP Roadmap",
       accent: "#7c3aed",
       subject: "Lộ trình phù hợp cho {name} đã được ghi nhận",
-      body:
-        "Kính chào {name},\n\nCảm ơn anh/chị đã để lại thông tin trên website để được tư vấn về ngành {major}.\n\nChúng tôi đã ghi nhận nhu cầu của anh/chị và sẽ sớm liên hệ để chia sẻ lộ trình học, điều kiện và cơ hội việc làm phù hợp nhất với mục tiêu nghề nghiệp của anh/chị.\n\nVới sự đồng hành của đội ngũ tư vấn chuyên nghiệp, anh/chị sẽ có cái nhìn rõ ràng hơn về hướng đi và quyết định phù hợp nhất cho tương lai.\n\nTrân trọng,\nĐội ngũ tư vấn",
+      body: "Kính chào {name},\n\nCảm ơn anh/chị đã để lại thông tin trên website để được tư vấn về ngành {major}.\n\nChúng tôi đã ghi nhận nhu cầu của anh/chị và sẽ sớm liên hệ để chia sẻ lộ trình học, điều kiện và cơ hội việc làm phù hợp nhất với mục tiêu nghề nghiệp của anh/chị.\n\nVới sự đồng hành của đội ngũ tư vấn chuyên nghiệp, anh/chị sẽ có cái nhìn rõ ràng hơn về hướng đi và quyết định phù hợp nhất cho tương lai.\n\nTrân trọng,\nĐội ngũ tư vấn",
     },
   ] as const;
 
   const customerTemplate =
-    customerTemplates.find((tpl) => tpl.subject === e.subject && tpl.body === e.body) ||
-    customerTemplates[0];
+    customerTemplates.find(
+      (tpl) => tpl.subject === e.subject && tpl.body === e.body,
+    ) || customerTemplates[0];
   const saleTemplate =
-    saleNotificationTemplates.find((tpl) => tpl.subject === e.notifySubject && tpl.body === e.notifyBody) ||
-    saleNotificationTemplates[0];
+    saleNotificationTemplates.find(
+      (tpl) => tpl.subject === e.notifySubject && tpl.body === e.notifyBody,
+    ) || saleNotificationTemplates[0];
 
   const applyCustomerTemplate = (tpl: (typeof customerTemplates)[number]) => {
     update((d) => {
@@ -2362,7 +2485,9 @@ function EmailModal({ onClose }: ModalProps) {
       d.emailAutomation.body = tpl.body;
     });
   };
-  const applySaleTemplate = (tpl: (typeof saleNotificationTemplates)[number]) => {
+  const applySaleTemplate = (
+    tpl: (typeof saleNotificationTemplates)[number],
+  ) => {
     update((d) => {
       d.emailAutomation.notifySubject = tpl.subject;
       d.emailAutomation.notifyBody = tpl.body;
@@ -2385,10 +2510,15 @@ function EmailModal({ onClose }: ModalProps) {
       ai_score: sampleLead.ai_score,
       timestamp: sampleLead.timestamp,
     });
-    const leadBrand = e.brandName?.trim() || e.headerText?.trim() || "Funnel Builder";
+    const leadBrand =
+      e.brandName?.trim() || e.headerText?.trim() || "Funnel Builder";
     const leadLogo = e.brandLogoUrl?.trim();
-    const leadBadge = type === "customer" ? "Lead khách hàng" : "Lead sales team";
-    const badgeStyle = type === "customer" ? "background:rgba(255,255,255,0.16);color:#fff;" : "background:rgba(15,23,42,0.08);color:#0f172a;";
+    const leadBadge =
+      type === "customer" ? "Lead khách hàng" : "Lead sales team";
+    const badgeStyle =
+      type === "customer"
+        ? "background:rgba(255,255,255,0.16);color:#fff;"
+        : "background:rgba(15,23,42,0.08);color:#0f172a;";
     return `
       <div style="max-width:620px;margin:0 auto;border:1px solid ${brandPalette.line};border-radius:20px;overflow:hidden;background:#ffffff;font-family:Arial,sans-serif;box-shadow:0 16px 40px rgba(15,23,42,0.08);">
         <div style="padding:18px 22px;background:linear-gradient(135deg, ${accent}, ${accent}dd);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px;">
@@ -2412,7 +2542,7 @@ function EmailModal({ onClose }: ModalProps) {
           <div style="font-size:14px;line-height:1.8;color:#334155;white-space:pre-wrap;">${filledBody.replace(/\n/g, "<br />")}</div>
           <div style="margin-top:18px;border-top:1px solid ${brandPalette.line};padding-top:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;color:${brandPalette.muted};font-size:12px;">
             <span>Hoàn tất trong 10 phút</span>
-            <a href="${e.ctaUrl || '#dang-ky'}" style="display:inline-flex;align-items:center;justify-content:center;padding:6px 10px;border-radius:999px;background:${brandPalette.soft};border:1px solid ${brandPalette.line};font-weight:700;color:${accent};text-decoration:none;">${e.ctaLabel || 'Nhận tư vấn ngay'}</a>
+            <a href="${e.ctaUrl || "#dang-ky"}" style="display:inline-flex;align-items:center;justify-content:center;padding:6px 10px;border-radius:999px;background:${brandPalette.soft};border:1px solid ${brandPalette.line};font-weight:700;color:${accent};text-decoration:none;">${e.ctaLabel || "Nhận tư vấn ngay"}</a>
           </div>
         </div>
       </div>
@@ -2480,7 +2610,9 @@ function EmailModal({ onClose }: ModalProps) {
             <TextInput
               value={e.brandLogoUrl}
               onChange={(ev) =>
-                update((d) => (d.emailAutomation.brandLogoUrl = ev.target.value))
+                update(
+                  (d) => (d.emailAutomation.brandLogoUrl = ev.target.value),
+                )
               }
               placeholder="https://.../logo.png"
             />
@@ -2626,11 +2758,13 @@ function EmailModal({ onClose }: ModalProps) {
       </Field>
       <Field label="Chế độ phân phối lead cho sale">
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-          {([
-            ["random", "Random"],
-            ["daily_round_robin", "Daily round robin"],
-            ["weighted_percent", "Theo % trọng số"],
-          ] as const).map(([mode, label]) => (
+          {(
+            [
+              ["random", "Random"],
+              ["daily_round_robin", "Daily round robin"],
+              ["weighted_percent", "Theo % trọng số"],
+            ] as const
+          ).map(([mode, label]) => (
             <button
               key={mode}
               type="button"
@@ -2653,9 +2787,11 @@ function EmailModal({ onClose }: ModalProps) {
         hint="Ví dụ: sale1@company.com=60; sale2@company.com=40"
       >
         <TextArea
-          value={Object.entries(e.salesDistributionWeights || {})
-            .map(([email, value]) => `${email}=${value}`)
-            .join("\n") || ""}
+          value={
+            Object.entries(e.salesDistributionWeights || {})
+              .map(([email, value]) => `${email}=${value}`)
+              .join("\n") || ""
+          }
           onChange={(ev) => {
             const next: Record<string, number> = {};
             for (const line of ev.target.value.split(/\n|;/)) {
@@ -2664,7 +2800,8 @@ function EmailModal({ onClose }: ModalProps) {
               const [email, rawValue] = trimmed.split("=");
               const cleanedEmail = (email || "").trim();
               const parsed = Number(rawValue || 0);
-              if (!cleanedEmail || Number.isNaN(parsed) || parsed <= 0) continue;
+              if (!cleanedEmail || Number.isNaN(parsed) || parsed <= 0)
+                continue;
               next[cleanedEmail] = parsed;
             }
             update((d) => (d.emailAutomation.salesDistributionWeights = next));
@@ -2685,7 +2822,9 @@ function EmailModal({ onClose }: ModalProps) {
           <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-neutral-500">
             Mẫu email khách hàng
           </p>
-          <span className="text-[10px] text-neutral-500">{customerTemplate.label}</span>
+          <span className="text-[10px] text-neutral-500">
+            {customerTemplate.label}
+          </span>
         </div>
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-3">
           {customerTemplates.map((tpl) => (
@@ -2701,17 +2840,24 @@ function EmailModal({ onClose }: ModalProps) {
             >
               <div
                 className="mb-2 h-2.5 rounded-full"
-                style={{ background: `linear-gradient(135deg, ${tpl.accent}, ${tpl.accent}cc)` }}
+                style={{
+                  background: `linear-gradient(135deg, ${tpl.accent}, ${tpl.accent}cc)`,
+                }}
               />
               <div className="text-[11px] font-bold uppercase tracking-[0.14em]">
                 {tpl.label}
               </div>
-              <div className="mt-1 text-[10px] opacity-80">Brand style · Premium</div>
+              <div className="mt-1 text-[10px] opacity-80">
+                Brand style · Premium
+              </div>
             </button>
           ))}
         </div>
       </div>
-      <Field label="Tiêu đề email khách" hint="Dùng {name} {phone} {city} {major} {source} {ai_score} {timestamp}">
+      <Field
+        label="Tiêu đề email khách"
+        hint="Dùng {name} {phone} {city} {major} {source} {ai_score} {timestamp}"
+      >
         <TextInput
           value={e.subject}
           onChange={(ev) =>
@@ -2758,7 +2904,9 @@ function EmailModal({ onClose }: ModalProps) {
             >
               <div
                 className="mb-2 h-2.5 rounded-full"
-                style={{ background: `linear-gradient(135deg, ${tpl.accent}, ${tpl.accent}cc)` }}
+                style={{
+                  background: `linear-gradient(135deg, ${tpl.accent}, ${tpl.accent}cc)`,
+                }}
               />
               <div className="text-[11px] font-bold uppercase tracking-[0.14em]">
                 {tpl.label}
@@ -2808,11 +2956,27 @@ function EmailModal({ onClose }: ModalProps) {
           Checklist phát hành doanh nghiệp
         </p>
         <ul className="space-y-1.5 text-[11px] leading-relaxed text-amber-900 dark:text-amber-200">
-          <li>• Dùng domain đã xác minh trên Resend, không dùng Gmail/Yahoo/Outlook làm From.</li>
-          <li>• Thiết lập biến môi trường: RESEND_API_KEY, RESEND_FROM_EMAIL, VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY, VITE_SUPABASE_ADMIN_EMAIL.</li>
-          <li>• Kiểm tra Supabase Auth admin và quyền admin_users trước khi bật công khai.</li>
-          <li>• Test email thật với một địa chỉ nhận ngoài trước khi mở rộng lưu lượng.</li>
-          <li>• Chạy webhook và check CRM sync trong production trước khi quảng cáo mạnh.</li>
+          <li>
+            • Dùng domain đã xác minh trên Resend, không dùng
+            Gmail/Yahoo/Outlook làm From.
+          </li>
+          <li>
+            • Thiết lập biến môi trường: RESEND_API_KEY, RESEND_FROM_EMAIL,
+            VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY,
+            VITE_SUPABASE_ADMIN_EMAIL.
+          </li>
+          <li>
+            • Kiểm tra Supabase Auth admin và quyền admin_users trước khi bật
+            công khai.
+          </li>
+          <li>
+            • Test email thật với một địa chỉ nhận ngoài trước khi mở rộng lưu
+            lượng.
+          </li>
+          <li>
+            • Chạy webhook và check CRM sync trong production trước khi quảng
+            cáo mạnh.
+          </li>
         </ul>
       </div>
 
@@ -2905,10 +3069,14 @@ function WebhookModal({ onClose }: ModalProps) {
     >
       <div className="mb-3 rounded-xl border border-neutral-200 bg-neutral-50 p-3 dark:border-white/10 dark:bg-white/5">
         <div className="flex items-center justify-between gap-2">
-          <span className={`rounded-full px-2 py-1 text-[10px] font-bold uppercase tracking-wide ${storageStatus.className}`}>
+          <span
+            className={`rounded-full px-2 py-1 text-[10px] font-bold uppercase tracking-wide ${storageStatus.className}`}
+          >
             {storageStatus.label}
           </span>
-          <span className="text-[10px] text-neutral-500">{storageStatus.detail}</span>
+          <span className="text-[10px] text-neutral-500">
+            {storageStatus.detail}
+          </span>
         </div>
       </div>
       <p className="mb-3 rounded-lg bg-sky-50 px-3 py-2 text-[11px] leading-relaxed text-sky-800">
@@ -3549,7 +3717,8 @@ function LeadsModal({ onClose }: ModalProps) {
                       {l.utmSource || "direct"}
                     </div>
                     <div className="mt-1 leading-tight">
-                      P{l.currentSession || 1} · H{l.visitsToday || 0} · T{l.visitsMonth || 0}
+                      P{l.currentSession || 1} · H{l.visitsToday || 0} · T
+                      {l.visitsMonth || 0}
                     </div>
                   </td>
                   <td className="px-2 py-2">
@@ -4598,10 +4767,51 @@ function LandingEditorModal({ onClose }: ModalProps) {
   function readImageDataUrl(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload = () =>
-        typeof reader.result === "string"
-          ? resolve(reader.result)
-          : reject(new Error("invalid image"));
+      reader.onload = () => {
+        if (typeof reader.result !== "string") {
+          reject(new Error("invalid image"));
+          return;
+        }
+        if (
+          !content.imageOptimization.convertUploadsToWebp ||
+          file.type === "image/webp" ||
+          file.type === "image/svg+xml"
+        ) {
+          resolve(reader.result);
+          return;
+        }
+        const image = new Image();
+        image.onload = () => {
+          const canvas = document.createElement("canvas");
+          canvas.width = image.naturalWidth;
+          canvas.height = image.naturalHeight;
+          const context = canvas.getContext("2d");
+          if (!context) {
+            resolve(reader.result as string);
+            return;
+          }
+          context.drawImage(image, 0, 0);
+          canvas.toBlob(
+            (blob) => {
+              if (!blob) {
+                resolve(reader.result as string);
+                return;
+              }
+              const webpReader = new FileReader();
+              webpReader.onload = () =>
+                typeof webpReader.result === "string"
+                  ? resolve(webpReader.result)
+                  : reject(new Error("invalid webp"));
+              webpReader.onerror = () => reject(new Error("webp read failed"));
+              webpReader.readAsDataURL(blob);
+            },
+            "image/webp",
+            Math.min(1, Math.max(0.1, content.imageOptimization.quality)),
+          );
+        };
+        image.onerror = () => resolve(reader.result as string);
+        image.src = reader.result;
+      };
       reader.onerror = () => reject(new Error("read failed"));
       reader.readAsDataURL(file);
     });
@@ -4617,16 +4827,14 @@ function LandingEditorModal({ onClose }: ModalProps) {
       setLogoError("Logo không được vượt quá 2MB.");
       return;
     }
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result !== "string") return;
-      update((draft) => {
-        draft.landing.logoUrl = reader.result as string;
-        draft.landing.showLogo = true;
-      });
-    };
-    reader.onerror = () => setLogoError("Không thể đọc file logo.");
-    reader.readAsDataURL(file);
+    readImageDataUrl(file)
+      .then((image) => {
+        update((draft) => {
+          draft.landing.logoUrl = image;
+          draft.landing.showLogo = true;
+        });
+      })
+      .catch(() => setLogoError("Không thể đọc file logo."));
   }
   function uploadHeroImage(file: File) {
     setHeroMediaError("");
@@ -4679,31 +4887,20 @@ function LandingEditorModal({ onClose }: ModalProps) {
         file.size <= 2 * 1024 * 1024,
     );
     if (selected.length === 0) return;
-    Promise.all(
-      selected.map(
-        (file) =>
-          new Promise<string>((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () =>
-              typeof reader.result === "string"
-                ? resolve(reader.result)
-                : reject(new Error("invalid image"));
-            reader.onerror = () => reject(new Error("read failed"));
-            reader.readAsDataURL(file);
-          }),
-      ),
-    ).then((images) => {
-      update((draft) => {
-        draft.landing.galleryImageUrls = [
-          ...draft.landing.galleryImageUrls,
-          ...images,
-        ];
-        draft.landing.galleryCaptions = [
-          ...draft.landing.galleryCaptions,
-          ...images.map(() => "Ảnh thực tế chương trình"),
-        ];
-      });
-    });
+    Promise.all(selected.map((file) => readImageDataUrl(file))).then(
+      (images) => {
+        update((draft) => {
+          draft.landing.galleryImageUrls = [
+            ...draft.landing.galleryImageUrls,
+            ...images,
+          ];
+          draft.landing.galleryCaptions = [
+            ...draft.landing.galleryCaptions,
+            ...images.map(() => "Ảnh thực tế chương trình"),
+          ];
+        });
+      },
+    );
   }
   const GRADUATION_IMAGE_LIMIT = 25;
   function uploadGraduationImages(files: FileList) {
@@ -4774,16 +4971,19 @@ function LandingEditorModal({ onClose }: ModalProps) {
   }
   function removeExpertImage(index: number) {
     update((draft) => {
-      draft.landing.expertImageUrls =
-        draft.landing.expertImageUrls.filter((_, i) => i !== index);
+      draft.landing.expertImageUrls = draft.landing.expertImageUrls.filter(
+        (_, i) => i !== index,
+      );
     });
   }
   function removeGalleryImage(index: number) {
     update((draft) => {
-      draft.landing.galleryImageUrls =
-        draft.landing.galleryImageUrls.filter((_, i) => i !== index);
-      draft.landing.galleryCaptions =
-        draft.landing.galleryCaptions.filter((_, i) => i !== index);
+      draft.landing.galleryImageUrls = draft.landing.galleryImageUrls.filter(
+        (_, i) => i !== index,
+      );
+      draft.landing.galleryCaptions = draft.landing.galleryCaptions.filter(
+        (_, i) => i !== index,
+      );
     });
   }
   function updateSections(nextSections: typeof content.sectionsArray) {
@@ -4959,6 +5159,78 @@ function LandingEditorModal({ onClose }: ModalProps) {
             e.target.value = "";
           }}
         />
+      </div>
+      <div className="mb-4 space-y-2 rounded-xl border border-neutral-200 p-3 dark:border-white/10">
+        <p className="text-xs font-bold">Bảo vệ & tối ưu ảnh</p>
+        <Toggle
+          checked={content.imageOptimization.convertUploadsToWebp}
+          onChange={(value) =>
+            update((draft) => {
+              draft.landing.imageOptimization.convertUploadsToWebp = value;
+            })
+          }
+          label="Tự động đổi ảnh upload sang WebP"
+        />
+        <Toggle
+          checked={content.watermark.enabled}
+          onChange={(value) =>
+            update((draft) => {
+              draft.landing.watermark.enabled = value;
+            })
+          }
+          label="Bật watermark trên website"
+        />
+        {content.watermark.enabled && (
+          <TextInput
+            value={content.watermark.text}
+            onChange={(event) =>
+              update((draft) => {
+                draft.landing.watermark.text = event.target.value;
+              })
+            }
+            placeholder="Nội dung watermark"
+          />
+        )}
+        <Toggle
+          checked={content.copyProtection.enabled}
+          onChange={(value) =>
+            update((draft) => {
+              draft.landing.copyProtection.enabled = value;
+            })
+          }
+          label="Bật bảo vệ copy"
+        />
+        {content.copyProtection.enabled && (
+          <>
+            <Toggle
+              checked={content.copyProtection.blockContextMenu}
+              onChange={(value) =>
+                update((draft) => {
+                  draft.landing.copyProtection.blockContextMenu = value;
+                })
+              }
+              label="Chặn menu chuột phải"
+            />
+            <Toggle
+              checked={content.copyProtection.blockImageDrag}
+              onChange={(value) =>
+                update((draft) => {
+                  draft.landing.copyProtection.blockImageDrag = value;
+                })
+              }
+              label="Chặn kéo ảnh"
+            />
+            <Toggle
+              checked={content.copyProtection.disableSelection}
+              onChange={(value) =>
+                update((draft) => {
+                  draft.landing.copyProtection.disableSelection = value;
+                })
+              }
+              label="Tắt chọn văn bản"
+            />
+          </>
+        )}
       </div>
       <div className="mb-4 space-y-3 rounded-xl border border-neutral-200 p-3 dark:border-white/10">
         <p className="text-xs font-bold">CTA & liên hệ trang chủ</p>
@@ -5969,9 +6241,7 @@ function LandingEditorModal({ onClose }: ModalProps) {
                 <button
                   type="button"
                   onClick={() =>
-                    document
-                      .getElementById(`graduation-replace-${i}`)
-                      ?.click()
+                    document.getElementById(`graduation-replace-${i}`)?.click()
                   }
                   aria-label="Thay thế ảnh"
                   className="absolute bottom-1 left-1 rounded bg-black/70 px-1 py-0.5 text-[9px] font-bold text-white opacity-0 transition group-hover:opacity-100"
@@ -6234,9 +6504,7 @@ function LandingEditorModal({ onClose }: ModalProps) {
                 <button
                   type="button"
                   onClick={() =>
-                    document
-                      .getElementById(`testimonial-avatar-${ti}`)
-                      ?.click()
+                    document.getElementById(`testimonial-avatar-${ti}`)?.click()
                   }
                   className="rounded-lg bg-neutral-900 px-3 py-1.5 text-xs font-bold text-white"
                 >
@@ -7020,7 +7288,13 @@ const REGISTRY: Record<AdminModalKey, (p: ModalProps) => ReactElement | null> =
     utm: UtmModal,
   };
 
-function getStorageStatus(config: { admin: { storageMode: "local" | "database"; supabaseUrl: string; supabaseAnonKey: string } }) {
+function getStorageStatus(config: {
+  admin: {
+    storageMode: "local" | "database";
+    supabaseUrl: string;
+    supabaseAnonKey: string;
+  };
+}) {
   const cloudReady =
     config.admin.storageMode === "database" &&
     Boolean(config.admin.supabaseUrl) &&
@@ -7057,7 +7331,9 @@ function SaveHint() {
   return (
     <div className="sticky bottom-0 -mx-4 mt-4 border-t border-neutral-200 bg-white px-4 pb-1 pt-3 dark:border-white/10 dark:bg-neutral-900">
       <div className="mb-2 flex items-center justify-between gap-2 rounded-lg bg-neutral-50 px-3 py-2 text-[10px] dark:bg-white/5">
-        <span className={`rounded-full px-2 py-1 font-bold uppercase tracking-wide ${status.className}`}>
+        <span
+          className={`rounded-full px-2 py-1 font-bold uppercase tracking-wide ${status.className}`}
+        >
           {status.label}
         </span>
         <span className="text-neutral-500">{status.detail}</span>

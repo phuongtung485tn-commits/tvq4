@@ -231,6 +231,21 @@ export interface LandingConfig {
     };
   }[];
   brandName: string;
+  imageOptimization: {
+    convertUploadsToWebp: boolean;
+    quality: number;
+  };
+  watermark: {
+    enabled: boolean;
+    text: string;
+    opacity: number;
+  };
+  copyProtection: {
+    enabled: boolean;
+    blockContextMenu: boolean;
+    blockImageDrag: boolean;
+    disableSelection: boolean;
+  };
   showLogo: boolean;
   logoUrl: string;
   heroEyebrow: string;
@@ -412,6 +427,21 @@ export const DEFAULT_CONFIG: SiteConfig = {
     fontBody: "Be Vietnam Pro",
   },
   landing: {
+    imageOptimization: {
+      convertUploadsToWebp: true,
+      quality: 0.82,
+    },
+    watermark: {
+      enabled: false,
+      text: "Du học nghề Trung Quốc",
+      opacity: 0.35,
+    },
+    copyProtection: {
+      enabled: false,
+      blockContextMenu: true,
+      blockImageDrag: true,
+      disableSelection: false,
+    },
     sectionsArray: [
       { id: "hero", type: "hero", label: "Hero", enabled: true, order: 0 },
       { id: "stats", type: "stats", label: "Stats", enabled: true, order: 1 },

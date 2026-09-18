@@ -4,6 +4,11 @@
 
 @custom-variant dark (&:is(.dark *));
 
+.copy-protection-selection-disabled,
+.copy-protection-selection-disabled * {
+  user-select: none !important;
+}
+
 /*
  * Design system: "Du học nghề Trung Quốc" recruitment landing page.
  * Deep industrial navy + high-contrast crimson CTA + gold accent.

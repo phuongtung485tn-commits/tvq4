@@ -46,6 +46,12 @@ function scoreLead(
     fastFillThresholdSec?: number;
     vipTimeOnPageSec?: number;
     vipScrollPercent?: number;
+    weightDevice?: number;
+    weightRegion?: number;
+    weightFastFill?: number;
+    weightTimeOnPage?: number;
+    weightScroll?: number;
+    weightReturnVisit?: number;
   },
 ): LeadAssessment {
   if (cfg?.enabled === false) {
@@ -58,9 +64,17 @@ function scoreLead(
     };
   }
 
-  const fastFill = cfg?.fastFillThresholdSec ?? 4;
-  const vipTime = cfg?.vipTimeOnPageSec ?? 80;
-  const vipScroll = cfg?.vipScrollPercent ?? 70;
+  const finiteNonNegative = (value: number | undefined, fallback: number) =>
+    Number.isFinite(value) ? Math.max(0, value as number) : fallback;
+  const fastFill = finiteNonNegative(cfg?.fastFillThresholdSec, 4);
+  const vipTime = finiteNonNegative(cfg?.vipTimeOnPageSec, 80);
+  const vipScroll = finiteNonNegative(cfg?.vipScrollPercent, 70);
+  const weightDevice = finiteNonNegative(cfg?.weightDevice, 18);
+  const weightRegion = finiteNonNegative(cfg?.weightRegion, 8);
+  const weightFastFill = finiteNonNegative(cfg?.weightFastFill, 15);
+  const weightTimeOnPage = finiteNonNegative(cfg?.weightTimeOnPage, 15);
+  const weightScroll = finiteNonNegative(cfg?.weightScroll, 12);
+  const weightReturnVisit = finiteNonNegative(cfg?.weightReturnVisit, 4);
   const reasons: string[] = [];
   const locationMismatch = Boolean(
     data.location_city &&
@@ -125,10 +139,10 @@ function scoreLead(
     /Nghệ An|Hà Tĩnh|Quảng Bình|Thanh Hóa|Quảng Ninh|Hải Phòng/i;
 
   let score = 45;
-  if (vipDevice.test(data.device_model_name)) score += 18;
-  if (data.time_on_page_seconds >= vipTime) score += 15;
-  if (data.scroll_depth_percent >= vipScroll) score += 12;
-  if (keyRegion.test(data.form_city)) score += 8;
+  if (vipDevice.test(data.device_model_name)) score += weightDevice;
+  if (data.time_on_page_seconds >= vipTime) score += weightTimeOnPage;
+  if (data.scroll_depth_percent >= vipScroll) score += weightScroll;
+  if (keyRegion.test(data.form_city)) score += weightRegion;
   if (data.utm_source && data.utm_source !== "Direct") score += 5;
   if (
     data.focus_section === "luong_thuc_tap" ||
@@ -136,7 +150,13 @@ function scoreLead(
   ) {
     score += 5;
   }
-  if (data.visits_today >= 2) score += 4;
+  if (data.visits_today >= 2) score += weightReturnVisit;
+  if (
+    data.form_fill_duration_seconds > 0 &&
+    data.form_fill_duration_seconds < fastFill
+  ) {
+    score -= weightFastFill;
+  }
   score = Math.max(0, Math.min(100, score));
 
   const riskLevel: LeadRiskLevel =
@@ -438,7 +458,9 @@ function generateBehaviorSummary(
   if (data.is_in_app_browser)
     parts.push("[APP] Mở trang trong app Facebook/TikTok/Zalo");
 
-  const summary = formatWebhookText(parts.map((part) => `• ${part}`).join("\n"));
+  const summary = formatWebhookText(
+    parts.map((part) => `• ${part}`).join("\n"),
+  );
   if (templateOverride && templateOverride.trim()) {
     return applyTemplate(templateOverride, {
       timeOnPage: `${data.time_on_page_seconds} giây`,
@@ -566,9 +588,10 @@ export function generateTrafficAdsSource(
     data.ttclid && `Mã TikTok: ${data.ttclid}`,
   ].filter(Boolean);
 
-  const finalValue = parts.length > 0
-    ? formatWebhookText(`🎯 ${parts.map((part) => `• ${part}`).join("\n")}`)
-    : "🎯 Nguồn: Truy cập trực tiếp";
+  const finalValue =
+    parts.length > 0
+      ? formatWebhookText(`🎯 ${parts.map((part) => `• ${part}`).join("\n")}`)
+      : "🎯 Nguồn: Truy cập trực tiếp";
 
   if (templateOverride && templateOverride.trim()) {
     return applyTemplate(templateOverride, {
@@ -589,7 +612,10 @@ export function buildVisitorBehaviorPayload(
   input: { city: string; major: string },
   cfg?: Parameters<typeof scoreLead>[1],
   fallbackSource = "",
-  salesAdviceConfig?: { saleAdviceTemplate?: string; behaviorSummaryTemplate?: string },
+  salesAdviceConfig?: {
+    saleAdviceTemplate?: string;
+    behaviorSummaryTemplate?: string;
+  },
 ): {
   behavior: BehaviorData;
   assessment: LeadAssessment;
